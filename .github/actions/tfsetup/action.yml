@@ -1,10 +1,26 @@
 name: 'Setup Terraform with Azure'
 description: 'Setup Terraform with Azure'
 
+inputs:
+  AZURE_CREDENTIALS:
+    description: 'Azure credentials'
+    required: true
+
 runs:
   using: 'composite'
   steps:
-    - name: 'Do something'
+    - name: 'Login to Azure'
+      id: login
+      uses: azure/login@v2
+      with:
+        creds: ${{ inputs.AZURE_CREDENTIALS }}
+
+    - name: 'Terraform init'
       shell: bash
-      id: do_something
-      run: echo "Doing something"
+      id: init
+      run: terraform init
+
+    - name: 'Terraform validate'
+      shell: bash
+      id: validate
+      run: terraform validate

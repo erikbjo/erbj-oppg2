@@ -21,13 +21,6 @@ jobs:
         id: checkout
         uses: actions/checkout@v4.1.7
 
-      - name: 'Do something'
-        run: echo "Do something"
-
-      - name: 'ls -la'
-        run: ls -la .github
-
-      - name: 'ls -la 2'
-        run: ls -la .github/actions
-
       - uses: './.github/actions/tfsetup'
+        with:
+          AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
