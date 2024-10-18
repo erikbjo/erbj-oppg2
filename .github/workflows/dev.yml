@@ -24,3 +24,7 @@ jobs:
       - uses: './.github/actions/tfsetup'
         with:
           AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: 'Terraform plan'
+        id: plan
+        run: terraform plan -out=tfplan
