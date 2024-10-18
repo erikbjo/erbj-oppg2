@@ -27,4 +27,7 @@ jobs:
       - name: 'ls -la'
         run: ls -la .github
 
-      - uses: .github/actions/tfsetup
+      - name: 'ls -la 2'
+        run: ls -la .github/actions
+
+      - uses: './.github/actions/tfsetup'
