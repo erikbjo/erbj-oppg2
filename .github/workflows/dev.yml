@@ -25,4 +25,3 @@ jobs:
         run: echo "Do something"
 
       - uses: ./.github/actions/tfsetup
-  deploy:
