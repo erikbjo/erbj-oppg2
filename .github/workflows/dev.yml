@@ -21,5 +21,8 @@ jobs:
         id: checkout
         uses: actions/checkout@v4.1.7
 
+      - name: 'Do something'
+        run: echo "Do something"
+
       - uses: ./.github/actions/tfsetup
   deploy:
