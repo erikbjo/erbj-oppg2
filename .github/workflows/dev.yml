@@ -20,11 +20,6 @@ jobs:
       - name: 'Checkout'
         id: checkout
         uses: actions/checkout@v4.1.7
-        with:
-          sparse-checkout: .github/actions
-          path: actions
 
-      - uses: erikbjo/erbj-oppg2/.github/actions/tfsetup
-        with:
-          terraform_workspace: 'dev'
+      - uses: ./.github/actions/tfsetup
   deploy:
