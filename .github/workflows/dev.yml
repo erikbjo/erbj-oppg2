@@ -25,6 +25,6 @@ jobs:
         run: echo "Do something"
 
       - name: 'ls -la'
-        run: ls -la
+        run: ls -la .github
 
-      - uses: ./.github/actions/tfsetup
+      - uses: .github/actions/tfsetup
