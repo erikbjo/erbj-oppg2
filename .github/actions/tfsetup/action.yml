@@ -1,0 +1,18 @@
+name: 'Setup Terraform with Azure'
+description: 'Setup Terraform with Azure'
+inputs:
+  AZURE_CREDENTIALS:
+    description: 'Azure credentials'
+    required: true
+    default: ${{ secrets.AZURE_CREDENTIALS }}
+outputs:
+  WORKSPACE_ROOT:
+    description: ''
+    value: ${{ steps.workspace_root.outputs.WORKSPACE_ROOT }}
+
+runs:
+  using: 'composite'
+    steps:
+      - name: 'Do something'
+        id: do_something
+        run: echo "Doing something"
