@@ -24,7 +24,7 @@ locals {
     subnet          = "subnet"
     service_plan    = "asp"
     load_balancer   = "lb"
-    app_service     = "app"
+    linux_web_app   = "app"
     sql_database    = "sql"
     blob_storage    = "blob"
   }
