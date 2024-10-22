@@ -1,0 +1,29 @@
+name: 'Get Severity Level'
+description: 'Gets the severity level of a vulnerability found by checkov, docs.prismacloud.io/...'
+author: 'https://github.com/erikbjo'
+
+inputs:
+  LINK:
+    description: 'Prisma Cloud link'
+    required: true
+
+outputs:
+  SEVERITY_LEVEL:
+    description: ''
+    value: ${{ steps.get_severity_level.outputs.SEVERITY_LEVEL }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: 'Get Severity Level'
+      id: get_severity_level
+      shell: bash
+      run: |
+        SEVERITY=$(curl -s "${{ inputs.LINK }}.plain.html" | grep -oP '(?<=<div>Severity</div>\s*<div>)[A-Z]+')
+        
+        if [[ -z "$SEVERITY" ]]; then
+          echo "Severity level not found"
+          exit 1
+        fi
+        
+        echo "SEVERITY_LEVEL=$SEVERITY" | tee -a $GITHUB_OUTPUT
