@@ -7,6 +7,10 @@ inputs:
     description: 'Azure credentials'
     required: true
 
+  WORKSPACE:
+    description: 'Terraform workspace'
+    required: true
+
 runs:
   using: 'composite'
   steps:
@@ -25,3 +29,9 @@ runs:
       shell: bash
       id: validate
       run: terraform validate
+
+    - name: 'Setup Terraform Workspace'
+      shell: bash
+      id: setup_tf_ws
+      run: |
+        terraform workspace new ${{ inputs.WORKSPACE }} || terraform workspace select ${{ inputs.WORKSPACE }}
