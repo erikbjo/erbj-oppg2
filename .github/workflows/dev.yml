@@ -28,3 +28,23 @@ jobs:
       - name: 'Terraform plan'
         id: plan
         run: terraform plan -out=tfplan
+
+      - name: 'Checkov scan'
+        id: checkov
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: ${{ env.WORKING_DIR }}
+          output_format: 'github_failed_only'
+          soft_fail: true
+          download_external_modules: true
+          output_file_path: 'checkov-report,'
+
+      - name: 'ls -la'
+        id: ls
+        shell: bash
+        run: ls -la
+
+      - name: 'cat checkov'
+        id: cat
+        shell: bash
+        run: cat checkov-report
