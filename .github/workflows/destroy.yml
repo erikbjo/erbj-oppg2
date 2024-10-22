@@ -1,1 +1,32 @@
+name: 'destroy'
+on:
+  workflow_dispatch:
+    inputs:
+      workspace:
+        description: 'Workspace to destroy'
+        required: true
+        default: 'dev/stage/prod'
 
+jobs:
+  destroy:
+    runs-on: ubuntu-latest
+    name: 'destroy'
+    env:
+      WORKING_DIR: '.'
+      WORKSPACE: ${{ inputs.workspace }}
+
+    steps:
+      - name: 'Checkout'
+        id: checkout
+        uses: actions/checkout@v4.1.7
+
+      - name: 'Setup Terraform with Azure credentials'
+        uses: './.github/actions/tfsetup'
+        with:
+          AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+          WORKSPACE: ${{ github.workflow }}
+
+      - name: 'Terraform destroy'
+        id: destroy
+        run: terraform destroy -auto-approve
+        working-directory: ${{ env.WORKING_DIR }}
