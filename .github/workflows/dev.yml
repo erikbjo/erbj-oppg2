@@ -16,6 +16,8 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     name: 'validate'
+    env:
+      SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
     steps:
       - name: 'Checkout'
         id: checkout
