@@ -13,8 +13,7 @@ on:
       - closed
 
 env:
-  ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
-  subscription_id: ${{ secrets.SUBSCRIPTION_ID }}
+  TF_VAR_subscription_id: ${{ secrets.SUBSCRIPTION_ID }}
 
 jobs:
   validate:
