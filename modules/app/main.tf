@@ -18,7 +18,7 @@ resource "azurerm_linux_web_app" "main" {
 
   public_network_access_enabled = false
   client_certificate_enabled    = true
-  https_only                    = false
+  https_only                    = true
 
   # storage_account {}
   # TODO: implement storage account
