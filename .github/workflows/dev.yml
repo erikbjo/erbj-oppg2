@@ -19,6 +19,7 @@ permissions:
 env:
   TF_VAR_subscription_id: ${{ secrets.SUBSCRIPTION_ID }}
   WORKING_DIR: '.'
+  GH_TOKEN: ${{ github.token }}
 
 jobs:
   validate:
@@ -44,5 +45,20 @@ jobs:
           directory: ${{ env.WORKING_DIR }}
           output_format: 'github_failed_only'
           download_external_modules: true
-          # output_file_path: 'checkov-report,'
-          soft_fail_on: 'LOW'
+          output_file_path: 'checkov-report,'
+          soft_fail: true
+
+      - name: 'Parse links from checkov report'
+        id: list_links
+        shell: bash
+        run: |
+          LINKS=$(grep -oP 'https://docs.prismacloud.io[^\)]+' checkov-report)
+          LINKS=$(echo "$LINKS" | tr '\n' ',' | sed 's/,$//')
+          echo "LINKS=$LINKS" | tee -a $GITHUB_OUTPUT
+
+      - name: 'Get Severity Level'
+        id: get_severity_level
+        uses: './.github/actions/getseveritylevel'
+        with:
+          LINKS: ${{ steps.list_links.outputs.LINKS }}
+          FAIL_ON_LEVEL: 'MEDIUM'

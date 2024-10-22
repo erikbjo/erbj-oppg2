@@ -1,5 +1,6 @@
-name: 'Setup Terraform with Azure'
-description: 'Setup Terraform with Azure'
+name: 'Terraform setup'
+description: 'Setup Terraform with Azure credentials'
+author: 'https://github.com/erikbjo'
 
 inputs:
   AZURE_CREDENTIALS:

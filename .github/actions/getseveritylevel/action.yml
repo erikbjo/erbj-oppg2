@@ -3,27 +3,23 @@ description: 'Gets the severity level of a vulnerability found by checkov, docs.
 author: 'https://github.com/erikbjo'
 
 inputs:
-  LINK:
-    description: 'Prisma Cloud link'
+  LINKS:
+    description: 'List of links to check'
     required: true
 
-outputs:
-  SEVERITY_LEVEL:
-    description: ''
-    value: ${{ steps.get_severity_level.outputs.SEVERITY_LEVEL }}
+  FAIL_ON_LEVEL:
+    description: 'Fail if severity level is equal or higher than this'
+    required: true
 
 runs:
   using: 'composite'
   steps:
-    - name: 'Get Severity Level'
+    - name: 'Get Severity Levels'
       id: get_severity_level
       shell: bash
+      env:
+        LINKS: ${{ inputs.LINKS }}
+        FAIL_ON_LEVEL: ${{ inputs.FAIL_ON_LEVEL }}
       run: |
-        SEVERITY=$(curl -s "${{ inputs.LINK }}.plain.html" | grep -oP '(?<=<div>Severity</div>\s*<div>)[A-Z]+')
-        
-        if [[ -z "$SEVERITY" ]]; then
-          echo "Severity level not found"
-          exit 1
-        fi
-        
-        echo "SEVERITY_LEVEL=$SEVERITY" | tee -a $GITHUB_OUTPUT
+        chmod +x .github/actions/getseveritylevel/checkseveritylevels.sh
+        ./.github/actions/getseveritylevel/checkseveritylevels.sh $LINKS $FAIL_ON_LEVEL
