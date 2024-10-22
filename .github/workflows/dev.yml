@@ -13,7 +13,7 @@ on:
       - closed
 
 env:
-  SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
 
 jobs:
   validate:
