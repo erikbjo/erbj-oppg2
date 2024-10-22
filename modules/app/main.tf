@@ -33,8 +33,10 @@ resource "azurerm_linux_web_app" "main" {
     failed_request_tracing  = true
 
     http_logs {
-      retention_in_days = 3
-      retention_in_mb   = 10
+      file_system {
+        retention_in_days = 25
+        retention_in_mb   = 50
+      }
     }
   }
 
