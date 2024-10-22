@@ -36,7 +36,7 @@ echo "$LINKS" | while read -r LINK; do
         sed 's/<[^>]*>//g')
 
     if [ -z "$SEVERITY" ]; then
-      echo "Failed to get severity level for link: $LINK"
+      echo "Failed to get severity level for link: $NEW_LINK"
       echo "Continuing to next link..."
       continue
     fi
@@ -44,11 +44,10 @@ echo "$LINKS" | while read -r LINK; do
     SEVERITY_NUMBER=$(severity_to_number "$SEVERITY")
     if [[ $SEVERITY_NUMBER -gt $FAIL_ON_LEVEL_NUMBER ]]
       then
-        echo "FAILED"
-        echo "Failed on link: $LINK, severity level: $SEVERITY"
+        echo "Failed on link: $LINK , severity level: $SEVERITY"
         exit 1
       else
-        echo "Passed on link: $LINK, severity level: $SEVERITY"
+        echo "Passed on link: $LINK , severity level: $SEVERITY"
     fi
   fi
 done

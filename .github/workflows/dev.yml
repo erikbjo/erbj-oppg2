@@ -58,7 +58,7 @@ jobs:
 
       - name: 'Get Severity Level'
         id: get_severity_level
-        uses: './.github/actions/getseveritylevel'
+        uses: './.github/actions/checkseveritylevel'
         with:
           LINKS: ${{ steps.list_links.outputs.LINKS }}
           FAIL_ON_LEVEL: 'MEDIUM'
