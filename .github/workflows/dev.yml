@@ -68,12 +68,18 @@ jobs:
         id: plan
         run: terraform plan -out=tfplan
 
-      # TODO: Step for uploading and accepting the plan, before new job for apply
+      - name: 'Upload tfplan'
+        id: upload
+        uses: actions/upload-artifact@v4.4.3
+        with:
+          name: tfplan
+          path: tfplan
 
   apply:
     needs: validate
     runs-on: ubuntu-latest
     name: 'apply'
+    environment: 'dev'
     steps:
       - name: 'Checkout'
         id: checkout
@@ -86,7 +92,11 @@ jobs:
           AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
           WORKSPACE: ${{ github.workflow }}
 
-      # TODO: Download tfplan from validate job
+      - name: 'Download tfplan'
+        id: download
+        uses: actions/download-artifact@v4.1.8
+        with:
+          name: tfplan
 
       - name: 'Terraform apply'
         id: apply
