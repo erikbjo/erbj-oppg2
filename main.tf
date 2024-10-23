@@ -19,6 +19,6 @@ module "app" {
   resource_group_name = azurerm_resource_group.main.name
   service_plan_name = format("%s-%s", local.naming_conventions.service_plan, local.suffix_kebab_case)
   linux_web_app_name = format("%s-%s", local.naming_conventions.linux_web_app, local.suffix_kebab_case)
-  # worker_count = 2
+  # worker_count = 3
   tags                = local.tags
 }

@@ -29,10 +29,10 @@ variable "linux_web_app_name" {
 variable "worker_count" {
   description = "The number of workers to use in the service plan"
   type        = number
-  default     = 2
+  default     = 3
   validation {
-    condition     = var.worker_count > 0
-    error_message = "Worker count must be greater than 0"
+    condition     = var.worker_count > 2
+    error_message = "Worker count must be greater than 2"
   }
   validation {
     condition     = var.worker_count <= 20
