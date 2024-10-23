@@ -37,29 +37,11 @@ jobs:
           AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
           WORKSPACE: ${{ github.workflow }}
 
-      - name: 'Checkov scan'
+      - name: 'Checkov with severity level'
         id: checkov
-        uses: bridgecrewio/checkov-action@master
+        uses: './.github/actions/checkovwithseveritylevel'
         with:
-          directory: ${{ env.WORKING_DIR }}
-          output_format: 'github_failed_only'
-          download_external_modules: true
-          output_file_path: 'checkov-report,'
-          soft_fail: true
-
-      - name: 'Parse links from checkov report'
-        id: list_links
-        shell: bash
-        run: |
-          LINKS=$(grep -oP 'https://docs.prismacloud.io[^\)]+' checkov-report)
-          LINKS=$(echo "$LINKS" | tr '\n' ',' | sed 's/,$//')
-          echo "LINKS=$LINKS" | tee -a $GITHUB_OUTPUT
-
-      - name: 'Check Severity Level'
-        id: check_severity_level
-        uses: './.github/actions/checkseveritylevel'
-        with:
-          LINKS: ${{ steps.list_links.outputs.LINKS }}
+          WORKING_DIR: ${{ env.WORKING_DIR }}
           FAIL_ON_LEVEL: 'HIGH'
 
       # TODO: Step for tfsec scan
