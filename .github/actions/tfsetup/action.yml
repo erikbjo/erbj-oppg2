@@ -14,11 +14,26 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - name: 'Login to Azure'
-      id: login
-      uses: azure/login@v2
-      with:
-        creds: ${{ inputs.AZURE_CREDENTIALS }}
+    #- name: 'Login to Azure'
+    #  id: login
+    #  uses: azure/login@v2.2.0
+    #  with:
+    #    creds: ${{ inputs.AZURE_CREDENTIALS }}
+
+    - name: 'JSON to env'
+      id: parse
+      shell: bash
+      env:
+        AZJSON: ${{ inputs.AZURE_CREDENTIALS }}
+      run: |
+        ARM_CLIENT_ID=$(echo $AZJSON | jq -r '.["clientId"]')
+        ARM_CLIENT_SECRET=$(echo $AZJSON | jq -r '.["clientSecret"]')
+        ARM_TENANT_ID=$(echo $AZJSON | jq -r '.["tenantId"]')
+        ARM_SUBSCRIPTION_ID=$(echo $AZJSON | jq -r '.["subscriptionId"]')
+        echo ARM_CLIENT_ID=$ARM_CLIENT_ID >> $GITHUB_ENV
+        echo ARM_CLIENT_SECRET=$ARM_CLIENT_SECRET >> $GITHUB_ENV
+        echo ARM_TENANT_ID=$ARM_TENANT_ID >> $GITHUB_ENV
+        echo ARM_SUBSCRIPTION_ID=$ARM_SUBSCRIPTION_ID >> $GITHUB_ENV
 
     - name: 'Terraform init'
       shell: bash
