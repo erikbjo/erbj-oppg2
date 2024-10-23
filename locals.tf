@@ -27,5 +27,7 @@ locals {
     linux_web_app   = "app"
     sql_database    = "sql"
     blob_storage    = "blob"
+    mssql_server    = "mssql"
+    mssql_db        = "mssqldb"
   }
 }

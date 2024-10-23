@@ -22,3 +22,10 @@ module "app" {
   # worker_count = 3
   tags                = local.tags
 }
+
+module "db" {
+  source              = "./modules/db"
+  location            = azurerm_resource_group.main.location
+  resource_group_name = azurerm_resource_group.main.name
+  tags                = local.tags
+}
