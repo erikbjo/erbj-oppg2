@@ -24,7 +24,9 @@ get_html_link() {
 LINKS=$(echo "$LINKS" | tr ',' '\n' | sed 's/,$//')
 FAIL_ON_LEVEL_NUMBER=$(severity_to_number "$FAIL_ON_LEVEL")
 
-echo "$LINKS" | while read -r LINK; do
+EXIT_CODE=0
+
+for LINK in $LINKS; do
   if [[ -n "$LINK" ]]; then
     echo "Checking link: $LINK"
     NEW_LINK=$(get_html_link "$LINK")
@@ -43,18 +45,20 @@ echo "$LINKS" | while read -r LINK; do
 
     SEVERITY_NUMBER=$(severity_to_number "$SEVERITY")
 
-    echo "Severity level: $SEVERITY_NUMBER"
-    echo "Fail on level: $FAIL_ON_LEVEL_NUMBER"
-
     if [[ $SEVERITY_NUMBER -ge $FAIL_ON_LEVEL_NUMBER ]]
       then
         echo "Failed on link: $LINK , severity level: $SEVERITY"
-        exit 1
+        EXIT_CODE=1
       else
         echo "Passed on link: $LINK , severity level: $SEVERITY"
     fi
   fi
 done
+
+if [[ $EXIT_CODE -eq 1 ]]; then
+  echo "One or more links failed the severity check."
+  exit 1
+fi
 
 echo "Successfully got severity levels, all levels passed lower than $FAIL_ON_LEVEL"
 exit 0
