@@ -29,3 +29,12 @@ module "db" {
   resource_group_name = azurerm_resource_group.main.name
   tags                = local.tags
 }
+
+module "storage" {
+  source              = "./modules/storage"
+  resource_group_name = azurerm_resource_group.main.name
+  location            = azurerm_resource_group.main.location
+  subnet_id           = module.network.subnet_ids[0]
+  vnet_id             = module.network.vnet_id
+  tags                = local.tags
+}

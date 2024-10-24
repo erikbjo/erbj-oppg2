@@ -5,6 +5,7 @@ variable "tags" {
 
 variable "location" {
   description = "The location to deploy the resources to"
+  type        = string
   nullable    = false
 }
 
