@@ -42,6 +42,10 @@ echo "$LINKS" | while read -r LINK; do
     fi
 
     SEVERITY_NUMBER=$(severity_to_number "$SEVERITY")
+
+    echo "Severity level: $SEVERITY_NUMBER"
+    echo "Fail on level: $FAIL_ON_LEVEL_NUMBER"
+
     if [[ $SEVERITY_NUMBER -ge $FAIL_ON_LEVEL_NUMBER ]]
       then
         echo "Failed on link: $LINK , severity level: $SEVERITY"
