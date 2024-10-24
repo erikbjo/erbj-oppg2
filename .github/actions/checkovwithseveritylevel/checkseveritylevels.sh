@@ -49,8 +49,6 @@ for LINK in $LINKS; do
       then
         echo "Failed on link: $LINK , severity level: $SEVERITY"
         EXIT_CODE=1
-      else
-        echo "Passed on link: $LINK , severity level: $SEVERITY"
     fi
   fi
 done
