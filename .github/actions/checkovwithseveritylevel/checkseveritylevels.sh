@@ -28,7 +28,6 @@ EXIT_CODE=0
 
 for LINK in $LINKS; do
   if [[ -n "$LINK" ]]; then
-    echo "Checking link: $LINK"
     NEW_LINK=$(get_html_link "$LINK")
 
     SEVERITY=$(curl -s "$NEW_LINK" |\
@@ -54,7 +53,7 @@ for LINK in $LINKS; do
 done
 
 if [[ $EXIT_CODE -eq 1 ]]; then
-  echo "One or more links failed the severity check."
+  echo "One or more links failed the severity check. Check output above for details."
   exit 1
 fi
 
