@@ -7,14 +7,14 @@ on:
         required: true
         default: 'dev/stage/prod'
 
+env:
+  WORKING_DIR: 'deployments'
+  WORKSPACE: ${{ inputs.workspace }}
+
 jobs:
   destroy:
     runs-on: ubuntu-latest
     name: 'destroy'
-    env:
-      WORKING_DIR: '.'
-      WORKSPACE: ${{ inputs.workspace }}
-
     steps:
       - name: 'Checkout'
         id: checkout

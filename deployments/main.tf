@@ -4,7 +4,7 @@ resource "azurerm_resource_group" "main" {
 }
 
 module "network" {
-  source              = "./modules/network"
+  source              = "../modules/network"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
   vnet_name = format("%s-%s", local.naming_conventions.virtual_network, local.suffix_kebab_case)
@@ -14,7 +14,7 @@ module "network" {
 }
 
 module "app" {
-  source              = "./modules/app"
+  source              = "../modules/app"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
   service_plan_name = format("%s-%s", local.naming_conventions.service_plan, local.suffix_kebab_case)
@@ -24,14 +24,14 @@ module "app" {
 }
 
 module "db" {
-  source              = "./modules/db"
+  source              = "../modules/db"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
   tags                = local.tags
 }
 
 module "storage" {
-  source              = "./modules/storage"
+  source              = "../modules/storage"
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
   subnet_id           = module.network.subnet_ids[0]
