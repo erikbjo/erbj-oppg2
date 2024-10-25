@@ -3,6 +3,10 @@ output "storage_account_id" {
   description = "The ID of the storage account"
 }
 
+output "storage_account_identity_id" {
+  value = azurerm_storage_account.main.identity[0].principal_id
+}
+
 output "storage_account_blob_endpoint" {
   value       = azurerm_storage_account.main.primary_blob_endpoint
   description = "The blob endpoint for the storage account"

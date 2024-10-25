@@ -33,10 +33,10 @@ resource "azurerm_key_vault" "main" {
   }
 }
 
-resource "azurerm_key_vault_access_policy" "client" {
+resource "azurerm_key_vault_access_policy" "storage_account_access" {
   key_vault_id = azurerm_key_vault.main.id
   tenant_id    = data.azurerm_client_config.current.tenant_id
-  object_id    = data.azurerm_client_config.current.object_id
+  object_id    = var.storage_account_identity_id
 
   key_permissions = [
     "Get", "Create", "Delete", "List", "Restore", "Recover", "UnwrapKey", "WrapKey", "Purge", "Encrypt", "Decrypt",
@@ -54,7 +54,7 @@ resource "azurerm_key_vault_key" "master" {
   key_opts = ["decrypt", "encrypt", "sign", "unwrapKey", "verify", "wrapKey"]
 
   depends_on = [
-    azurerm_key_vault_access_policy.client
+    azurerm_key_vault_access_policy.storage_account_access
   ]
 }
 
@@ -70,10 +70,4 @@ resource "azurerm_private_endpoint" "main" {
     is_manual_connection           = false
     subresource_names = ["vault"]
   }
-}
-
-resource "azurerm_storage_account_customer_managed_key" "ok_cmk" {
-  storage_account_id = var.storage_account_id
-  key_vault_id       = azurerm_key_vault.main.id
-  key_name           = azurerm_key_vault_key.master.name
 }

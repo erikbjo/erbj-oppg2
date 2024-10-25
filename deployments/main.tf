@@ -43,14 +43,18 @@ module "storage" {
   private_endpoint_name = format("%s-%s", local.naming_conventions.private_endpoint, local.suffix_mumblecase)
   storage_account_name = format("%s%s", local.naming_conventions.storage_account, local.suffix_mumblecase)
   vnet_link_name = format("%s-%s", local.naming_conventions.vnet_link, local.suffix_kebab_case)
+  key_vault_id = module.keyvault.key_vault_id
+  key_name     = module.keyvault.key_name
+  key_version  = module.keyvault.key_version
 }
 
 module "keyvault" {
-  source              = "../modules/keyvault"
-  location            = azurerm_resource_group.main.location
-  resource_group_name = azurerm_resource_group.main.name
-  tags                = local.tags
-  subnet_id           = module.network.subnet_ids[0]
-  storage_account_id  = module.storage.storage_account_id
+  source                      = "../modules/keyvault"
+  location                    = azurerm_resource_group.main.location
+  resource_group_name         = azurerm_resource_group.main.name
+  tags                        = local.tags
+  subnet_id                   = module.network.subnet_ids[0]
+  storage_account_id          = module.storage.storage_account_id
+  storage_account_identity_id = module.storage.storage_account_identity_id
   key_vault_name = format("%s-%s", local.naming_conventions.key_vault, local.suffix_kebab_case)
 }

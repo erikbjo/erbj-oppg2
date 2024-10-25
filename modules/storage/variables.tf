@@ -44,3 +44,19 @@ variable "storage_account_name" {
   type        = string
   nullable    = false
 }
+
+variable "key_vault_id" {
+  type = string
+  description = "ID of the Key Vault containing the encryption key"
+}
+
+variable "key_name" {
+  type = string
+  description = "Name of the encryption key in Key Vault"
+}
+
+variable "key_version" {
+  type = string
+  description = "Version of the encryption key (optional)"
+  default = null
+}

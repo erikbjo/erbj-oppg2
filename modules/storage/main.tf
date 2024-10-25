@@ -11,6 +11,10 @@ resource "azurerm_storage_account" "main" {
   https_traffic_only_enabled      = true
   tags                            = var.tags
 
+  identity {
+    type = "SystemAssigned"
+  }
+
   blob_properties {
     delete_retention_policy {
       days = 7
@@ -26,6 +30,13 @@ resource "azurerm_storage_account" "main" {
       retention_policy_days = 10
     }
   }
+}
+
+resource "azurerm_storage_account_customer_managed_key" "encryption" {
+  storage_account_id = azurerm_storage_account.main.id
+  key_vault_id       = var.key_vault_id
+  key_name           = var.key_name
+  key_version        = var.key_version
 }
 
 resource "azurerm_storage_container" "main" {
