@@ -15,9 +15,10 @@ variable "resource_group_name" {
   nullable    = false
 }
 
-variable "keys" {
-  description = "A list of keys to create in the key vault"
-  type = list(string)
+variable "storage_account_id" {
+  description = "The ID of the storage account"
+  type        = string
+  nullable    = false
 }
 
 variable "subnet_id" {

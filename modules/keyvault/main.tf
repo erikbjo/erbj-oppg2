@@ -33,6 +33,31 @@ resource "azurerm_key_vault" "main" {
   }
 }
 
+resource "azurerm_key_vault_access_policy" "client" {
+  key_vault_id = azurerm_key_vault.main.id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = data.azurerm_client_config.current.object_id
+
+  key_permissions = [
+    "Get", "Create", "Delete", "List", "Restore", "Recover", "UnwrapKey", "WrapKey", "Purge", "Encrypt", "Decrypt",
+    "Sign", "Verify"
+  ]
+  secret_permissions = ["Get"]
+}
+
+resource "azurerm_key_vault_key" "master" {
+  name            = "master-key"
+  key_vault_id    = azurerm_key_vault.main.id
+  key_type        = "RSA"
+  key_size        = 2048
+  expiration_date = "2024-12-01T08:00:00+00:00"
+  key_opts = ["decrypt", "encrypt", "sign", "unwrapKey", "verify", "wrapKey"]
+
+  depends_on = [
+    azurerm_key_vault_access_policy.client
+  ]
+}
+
 resource "azurerm_private_endpoint" "main" {
   name                = "keyvault-private-endpoint"
   resource_group_name = azurerm_key_vault.main.resource_group_name
@@ -45,4 +70,10 @@ resource "azurerm_private_endpoint" "main" {
     is_manual_connection           = false
     subresource_names = ["vault"]
   }
+}
+
+resource "azurerm_storage_account_customer_managed_key" "ok_cmk" {
+  storage_account_id = var.storage_account_id
+  key_vault_id       = azurerm_key_vault.main.id
+  key_name           = azurerm_key_vault_key.master.name
 }

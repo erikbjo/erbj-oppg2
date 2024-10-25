@@ -8,7 +8,7 @@ resource "azurerm_storage_account" "main" {
   local_user_enabled              = false
   public_network_access_enabled   = false
   allow_nested_items_to_be_public = false
-  enable_https_traffic_only       = true
+  https_traffic_only_enabled      = true
   tags                            = var.tags
 
   blob_properties {
@@ -47,32 +47,7 @@ resource "azurerm_private_endpoint" "storage" {
     is_manual_connection           = false
   }
 
-  #private_dns_zone_group {
-  # name = "storage-endpoint-connection"
-  # private_dns_zone_ids = [azurerm_private_dns_zone.storage.id]
-  #}
-
   depends_on = [
     azurerm_storage_account.main
   ]
 }
-
-#resource "azurerm_private_dns_a_record" "storage_dns" {
-#  name                = "storageaccount"
-#  zone_name           = azurerm_private_dns_zone.storage.name
-#  resource_group_name = var.resource_group_name
-#  ttl                 = 300
-#  records = [azurerm_private_endpoint.storage.private_service_connection.0.private_ip_address]
-#}
-#
-#resource "azurerm_private_dns_zone" "storage" {
-#  name                = "privatelink.blob.core.windows.net"
-#  resource_group_name = var.resource_group_name
-#}
-#
-#resource "azurerm_private_dns_zone_virtual_network_link" "vnet_storage_link" {
-#  name                  = var.vnet_link_name
-#  resource_group_name   = var.resource_group_name
-#  private_dns_zone_name = azurerm_private_dns_zone.storage.name
-#  virtual_network_id    = var.vnet_id
-#}

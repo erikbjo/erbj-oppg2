@@ -9,18 +9,21 @@ resource "azurerm_mssql_server" "main" {
   administrator_login_password  = "4-v3ry-53cr37-p455w0rd"
   public_network_access_enabled = false
   minimum_tls_version           = "1.2"
+  tags                          = var.tags
 }
 
 resource "azurerm_mssql_server_extended_auditing_policy" "main" {
   server_id                  = azurerm_mssql_server.main.id
   storage_endpoint           = var.storage_primary_blob_endpoint
   storage_account_access_key = var.storage_account_access_key
+  retention_in_days          = 90
 
   timeouts {
     create = "1h"
     update = "1h"
     delete = "1h"
   }
+
 }
 
 resource "azurerm_mssql_database" "main" {

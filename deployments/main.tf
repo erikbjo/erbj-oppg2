@@ -24,10 +24,13 @@ module "app" {
 }
 
 module "db" {
-  source              = "../modules/db"
-  location            = azurerm_resource_group.main.location
-  resource_group_name = azurerm_resource_group.main.name
-  tags                = local.tags
+  source                        = "../modules/db"
+  location                      = azurerm_resource_group.main.location
+  resource_group_name           = azurerm_resource_group.main.name
+  tags                          = local.tags
+  key_vault_id                  = module.keyvault.key_vault_id
+  storage_account_access_key    = module.storage.storage_account_primary_access_key
+  storage_primary_blob_endpoint = module.storage.storage_account_blob_endpoint
 }
 
 module "storage" {
@@ -48,8 +51,6 @@ module "keyvault" {
   resource_group_name = azurerm_resource_group.main.name
   tags                = local.tags
   subnet_id           = module.network.subnet_ids[0]
+  storage_account_id  = module.storage.storage_account_id
   key_vault_name = format("%s-%s", local.naming_conventions.key_vault, local.suffix_kebab_case)
-  keys = [
-    module.storage.storage_account_primary_access_key
-  ]
 }
