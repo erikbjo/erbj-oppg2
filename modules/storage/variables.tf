@@ -26,3 +26,21 @@ variable "vnet_id" {
   type        = string
   nullable    = false
 }
+
+variable "vnet_link_name" {
+  description = "The name of the virtual network link"
+  type        = string
+  nullable    = false
+}
+
+variable "private_endpoint_name" {
+  description = "The name of the private endpoint"
+  type        = string
+  nullable    = false
+}
+
+variable "storage_account_name" {
+  description = "The name of the storage account"
+  type        = string
+  nullable    = false
+}
