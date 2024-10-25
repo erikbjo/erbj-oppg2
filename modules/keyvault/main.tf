@@ -45,12 +45,6 @@ resource "azurerm_key_vault_access_policy" "storage_account_access" {
   secret_permissions = ["Get"]
 }
 
-resource "azurerm_storage_account_customer_managed_key" "encryption" {
-  storage_account_id = var.storage_account_id
-  key_vault_id       = azurerm_key_vault.main.id
-  key_name           = azurerm_key_vault_key.master.name
-}
-
 resource "azurerm_key_vault_key" "master" {
   name            = "master-key"
   key_vault_id    = azurerm_key_vault.main.id
