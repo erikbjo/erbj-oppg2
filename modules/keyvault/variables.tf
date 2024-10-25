@@ -15,20 +15,19 @@ variable "resource_group_name" {
   nullable    = false
 }
 
-variable "key_vault_id" {
-  description = "The ID of the key vault"
+variable "keys" {
+  description = "A list of keys to create in the key vault"
+  type = list(string)
+}
+
+variable "subnet_id" {
+  description = "The ID of the subnet to deploy a private endpoint to"
   type        = string
   nullable    = false
 }
 
-variable "storage_primary_blob_endpoint" {
-  description = "The primary blob endpoint for the storage account"
-  type        = string
-  nullable    = false
-}
-
-variable "storage_account_access_key" {
-  description = "The access key for the storage account"
+variable "key_vault_name" {
+  description = "The name of the key vault"
   type        = string
   nullable    = false
 }

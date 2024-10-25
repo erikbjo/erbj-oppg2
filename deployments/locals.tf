@@ -31,5 +31,6 @@ locals {
     mssql_db         = "mssqldb"
     private_endpoint = "pe"
     vnet_link        = "vnetlink"
+    key_vault        = "kv"
   }
 }
