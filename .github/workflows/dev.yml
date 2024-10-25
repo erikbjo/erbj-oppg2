@@ -18,6 +18,7 @@ env:
   TF_VAR_subscription_id: ${{ secrets.SUBSCRIPTION_ID }}
   WORKING_DIR: 'deployments'
   GH_TOKEN: ${{ github.token }}
+  WORKSPACE: ${{ github.workflow }}
 
 jobs:
   validate:
@@ -33,7 +34,8 @@ jobs:
         uses: './.github/actions/tfsetup'
         with:
           AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
-          WORKSPACE: ${{ github.workflow }}
+          WORKSPACE: ${{ env.WORKSPACE }}
+          WORKING_DIR: ${{ env.WORKING_DIR }}
 
       - name: 'Checkov with severity level'
         id: checkov
@@ -46,12 +48,13 @@ jobs:
 
       - name: 'Terraform plan'
         id: plan
-        run: terraform plan -out=tfplan
+        run: terraform plan -out=${{ env.WORKSPACE }}.tfplan
+        working-directory: ${{ env.WORKING_DIR }}
 
       - name: 'Save tfplan'
         uses: actions/cache/save@v4.1.2
         with:
-          path: tfplan
+          path: ${{ env.WORKING_DIR }}/${{ env.WORKSPACE }}.tfplan
           key: tfplan-${{ github.sha }}
 
   apply:
@@ -69,16 +72,17 @@ jobs:
         uses: './.github/actions/tfsetup'
         with:
           AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
-          WORKSPACE: ${{ github.workflow }}
+          WORKSPACE: ${{ env.WORKSPACE }}
 
       - name: Restore cached source
         uses: actions/cache/restore@v4.1.2
         with:
-          path: tfplan
+          path: ${{ env.WORKING_DIR }}/${{ env.WORKSPACE }}.tfplan
           key: tfplan-${{ github.sha }}
 
       - name: 'Terraform apply'
         id: apply
-        run: terraform apply -auto-approve tfplan
+        run: terraform apply -auto-approve ${{ env.WORKSPACE }}.tfplan
+        working-directory: ${{ env.WORKING_DIR }}
 
   # Eventual job for testing the infrastructure
