@@ -21,6 +21,12 @@ variable "storage_account_id" {
   nullable    = false
 }
 
+variable "storage_account_identity_id" {
+  description = "The ID of the managed identity for the storage account"
+  type        = string
+  nullable    = false
+}
+
 variable "subnet_id" {
   description = "The ID of the subnet to deploy a private endpoint to"
   type        = string

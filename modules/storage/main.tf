@@ -11,6 +11,10 @@ resource "azurerm_storage_account" "main" {
   https_traffic_only_enabled      = true
   tags                            = var.tags
 
+  identity {
+    type = "SystemAssigned"
+  }
+
   blob_properties {
     delete_retention_policy {
       days = 7
