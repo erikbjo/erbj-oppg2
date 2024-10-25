@@ -46,11 +46,12 @@ module "storage" {
 }
 
 module "keyvault" {
-  source              = "../modules/keyvault"
-  location            = azurerm_resource_group.main.location
-  resource_group_name = azurerm_resource_group.main.name
-  tags                = local.tags
-  subnet_id           = module.network.subnet_ids[0]
-  storage_account_id  = module.storage.storage_account_id
+  source                      = "../modules/keyvault"
+  location                    = azurerm_resource_group.main.location
+  resource_group_name         = azurerm_resource_group.main.name
+  tags                        = local.tags
+  subnet_id                   = module.network.subnet_ids[0]
+  storage_account_id          = module.storage.storage_account_id
+  storage_account_identity_id = module.storage.storage_account_identity_id
   key_vault_name = format("%s-%s", local.naming_conventions.key_vault, local.suffix_kebab_case)
 }
