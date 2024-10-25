@@ -77,9 +77,3 @@ resource "azurerm_private_endpoint" "main" {
     subresource_names = ["vault"]
   }
 }
-
-resource "azurerm_storage_account_customer_managed_key" "ok_cmk" {
-  storage_account_id = var.storage_account_id
-  key_vault_id       = azurerm_key_vault.main.id
-  key_name           = azurerm_key_vault_key.master.name
-}
