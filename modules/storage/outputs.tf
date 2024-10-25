@@ -4,7 +4,7 @@ output "storage_account_id" {
 }
 
 output "storage_account_identity_id" {
-  value = azurerm_storage_account.main.identity.principal_id
+  value = azurerm_storage_account.main.identity[0].principal_id
 }
 
 output "storage_account_blob_endpoint" {
