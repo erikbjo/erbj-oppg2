@@ -11,6 +11,10 @@ inputs:
     description: 'Terraform workspace'
     required: true
 
+  WORKING_DIR:
+    description: 'Working directory'
+    required: true
+
 runs:
   using: 'composite'
   steps:
@@ -38,15 +42,18 @@ runs:
     - name: 'Terraform init'
       shell: bash
       id: init
+      working-directory: ${{ inputs.WORKING_DIR }}
       run: terraform init
 
     - name: 'Terraform validate'
       shell: bash
       id: validate
+      working-directory: ${{ inputs.WORKING_DIR }}
       run: terraform validate
 
     - name: 'Setup Terraform Workspace'
       shell: bash
       id: setup_tf_ws
+      working-directory: ${{ inputs.WORKING_DIR }}
       run: |
         terraform workspace new ${{ inputs.WORKSPACE }} || terraform workspace select ${{ inputs.WORKSPACE }}
