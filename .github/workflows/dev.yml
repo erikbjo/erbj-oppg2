@@ -73,6 +73,7 @@ jobs:
         with:
           AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
           WORKSPACE: ${{ env.WORKSPACE }}
+          WORKING_DIR: ${{ env.WORKING_DIR }}
 
       - name: Restore cached source
         uses: actions/cache/restore@v4.1.2
