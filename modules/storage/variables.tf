@@ -60,9 +60,3 @@ variable "key_version" {
   description = "Version of the encryption key (optional)"
   default     = null
 }
-
-variable "uai_principal_id" {
-  type        = string
-  description = "The principal ID of the user-assigned identity"
-  nullable    = false
-}

@@ -19,23 +19,7 @@ resource "azurerm_mssql_server" "main" {
   tags                          = var.tags
 
   identity {
-    type = "UserAssigned"
-    identity_ids = [
-      var.uai_id
-    ]
-  }
-}
-
-resource "azurerm_mssql_server_extended_auditing_policy" "main" {
-  server_id                  = azurerm_mssql_server.main.id
-  storage_endpoint           = var.storage_primary_blob_endpoint
-  storage_account_access_key = var.storage_account_access_key
-  retention_in_days          = 90
-
-  timeouts {
-    create = "1h"
-    update = "1h"
-    delete = "1h"
+    type = "SystemAssigned"
   }
 }
 
@@ -51,14 +35,7 @@ resource "azurerm_mssql_database" "main" {
   enclave_type   = "VBS"
   ledger_enabled = true
   tags           = var.tags
-
-  identity {
-    type = "UserAssigned"
-    identity_ids = [
-      var.uai_id
-    ]
-  }
-
+  
   transparent_data_encryption_key_vault_key_id = azurerm_key_vault_key.generated.id
 
   # prevent the possibility of accidental data loss
@@ -76,3 +53,16 @@ resource "azurerm_key_vault_key" "generated" {
 
   key_opts = ["unwrapKey", "wrapKey"]
 }
+
+# resource "azurerm_mssql_server_extended_auditing_policy" "main" {
+#   server_id                  = azurerm_mssql_server.main.id
+#   storage_endpoint           = var.storage_primary_blob_endpoint
+#   storage_account_access_key = var.storage_account_access_key
+#   retention_in_days          = 90
+#
+#   timeouts {
+#     create = "1h"
+#     update = "1h"
+#     delete = "1h"
+#   }
+# }

@@ -4,10 +4,8 @@ resource "azurerm_resource_group" "main" {
   tags     = local.tags
 }
 
-resource "azurerm_user_assigned_identity" "main" {
-  name = format("%s-%s", local.naming_conventions.user_assigned_identity, local.suffix_kebab_case)
-  resource_group_name = azurerm_resource_group.main.name
-  location            = azurerm_resource_group.main.location
+data "azurerm_role_definition" "contributor" {
+  name = "Contributor"
 }
 
 ### Modules
@@ -41,7 +39,6 @@ module "db" {
   key_vault_id                  = module.keyvault.key_vault_id
   storage_account_access_key    = module.storage.storage_account_primary_access_key
   storage_primary_blob_endpoint = module.storage.storage_account_blob_endpoint
-  uai_id                        = azurerm_user_assigned_identity.main.id
 }
 
 module "storage" {
@@ -54,7 +51,6 @@ module "storage" {
   key_vault_id        = module.keyvault.key_vault_id
   key_name            = module.keyvault.key_name
   key_version         = module.keyvault.key_version
-  uai_principal_id    = azurerm_user_assigned_identity.main.principal_id
 
   private_endpoint_name = format("%s-%s", local.naming_conventions.private_endpoint, local.suffix_mumblecase)
   storage_account_name = format("%s%s", local.naming_conventions.storage_account, local.suffix_mumblecase)
@@ -69,7 +65,6 @@ module "keyvault" {
   subnet_id                   = module.network.subnet_ids[0]
   storage_account_id          = module.storage.storage_account_id
   storage_account_identity_id = module.storage.storage_account_identity_id
-  uai_principal_id            = azurerm_user_assigned_identity.main.principal_id
 
   key_vault_name = format("%s%s", local.naming_conventions.key_vault, local.suffix_mumblecase)
 }
