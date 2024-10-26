@@ -1,7 +1,22 @@
+terraform {
+  required_providers {
+    random = {
+      source  = "hashicorp/random"
+      version = "3.6.2"
+    }
+  }
+}
 data "azurerm_client_config" "current" {}
 
+resource "random_string" "random" {
+  length  = 8
+  special = false
+  upper   = false
+  numeric = false
+}
+
 resource "azurerm_mssql_server" "main" {
-  name                          = "example-sqlserver"
+  name                          = format("erbjmssql-%s", random_string.random.result)
   resource_group_name           = var.resource_group_name
   location                      = var.location
   version                       = "12.0"

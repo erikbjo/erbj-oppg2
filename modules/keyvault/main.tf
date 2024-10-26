@@ -43,6 +43,11 @@ resource "azurerm_key_vault_access_policy" "storage_account_access" {
     "Sign", "Verify"
   ]
   secret_permissions = ["Get"]
+
+  depends_on = [
+    azurerm_key_vault.main,
+    azurerm_private_endpoint.main
+  ]
 }
 
 resource "azurerm_key_vault_key" "master" {
@@ -54,7 +59,8 @@ resource "azurerm_key_vault_key" "master" {
   key_opts = ["decrypt", "encrypt", "sign", "unwrapKey", "verify", "wrapKey"]
 
   depends_on = [
-    azurerm_key_vault_access_policy.storage_account_access
+    azurerm_key_vault_access_policy.storage_account_access,
+    azurerm_private_endpoint.main
   ]
 }
 
