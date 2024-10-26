@@ -1,11 +1,3 @@
-terraform {
-  required_providers {
-    random = {
-      source  = "hashicorp/random"
-      version = "3.6.2"
-    }
-  }
-}
 data "azurerm_client_config" "current" {}
 
 resource "random_string" "random" {
@@ -16,7 +8,7 @@ resource "random_string" "random" {
 }
 
 resource "azurerm_mssql_server" "main" {
-  name                          = format("erbjmssql-%s", random_string.random.result)
+  name = format("erbjmssql-%s", random_string.random.result)
   resource_group_name           = var.resource_group_name
   location                      = var.location
   version                       = "12.0"
@@ -38,7 +30,12 @@ resource "azurerm_mssql_server_extended_auditing_policy" "main" {
     update = "1h"
     delete = "1h"
   }
+}
 
+resource "azurerm_role_assignment" "audit" {
+  principal_id         = data.azurerm_client_config.current.object_id
+  role_definition_name = "SQL DB Contributor"
+  scope                = azurerm_mssql_server.main.id
 }
 
 resource "azurerm_mssql_database" "main" {
