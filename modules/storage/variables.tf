@@ -46,17 +46,23 @@ variable "storage_account_name" {
 }
 
 variable "key_vault_id" {
-  type = string
+  type        = string
   description = "ID of the Key Vault containing the encryption key"
 }
 
 variable "key_name" {
-  type = string
+  type        = string
   description = "Name of the encryption key in Key Vault"
 }
 
 variable "key_version" {
-  type = string
+  type        = string
   description = "Version of the encryption key (optional)"
-  default = null
+  default     = null
+}
+
+variable "uai_principal_id" {
+  type        = string
+  description = "The principal ID of the user-assigned identity"
+  nullable    = false
 }

@@ -37,6 +37,12 @@ resource "azurerm_storage_account" "main" {
   }
 }
 
+resource "azurerm_role_assignment" "sql_blob_data_contributor" {
+  principal_id         = var.uai_principal_id
+  role_definition_name = "Storage Blob Data Contributor"
+  scope                = azurerm_storage_account.main.id
+}
+
 resource "azurerm_storage_account_customer_managed_key" "encryption" {
   storage_account_id = azurerm_storage_account.main.id
   key_vault_id       = var.key_vault_id

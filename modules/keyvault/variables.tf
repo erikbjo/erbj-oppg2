@@ -38,3 +38,9 @@ variable "key_vault_name" {
   type        = string
   nullable    = false
 }
+
+variable "uai_principal_id" {
+  type        = string
+  description = "The principal ID of the user-assigned identity"
+  nullable    = false
+}

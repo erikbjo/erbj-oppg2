@@ -50,6 +50,14 @@ resource "azurerm_key_vault_access_policy" "storage_account_access" {
   ]
 }
 
+resource "azurerm_key_vault_access_policy" "sql_server_access" {
+  key_vault_id = azurerm_key_vault.main.id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = var.uai_principal_id
+
+  key_permissions = ["Get", "WrapKey", "UnwrapKey"]
+}
+
 resource "azurerm_key_vault_key" "master" {
   name            = "master-key"
   key_vault_id    = azurerm_key_vault.main.id

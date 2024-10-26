@@ -32,3 +32,9 @@ variable "storage_account_access_key" {
   type        = string
   nullable    = false
 }
+
+variable "uai_id" {
+  description = "The ID of the user-assigned identity"
+  type        = string
+  nullable    = false
+}

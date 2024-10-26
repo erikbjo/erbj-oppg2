@@ -17,6 +17,13 @@ resource "azurerm_mssql_server" "main" {
   public_network_access_enabled = false
   minimum_tls_version           = "1.2"
   tags                          = var.tags
+
+  identity {
+    type = "UserAssigned"
+    identity_ids = [
+      var.uai_id
+    ]
+  }
 }
 
 resource "azurerm_mssql_server_extended_auditing_policy" "main" {
@@ -45,12 +52,12 @@ resource "azurerm_mssql_database" "main" {
   ledger_enabled = true
   tags           = var.tags
 
-  #identity {
-  #  type = "UserAssigned"
-  #  identity_ids = [
-  # ??? TODO: Add the identity id here
-  #  ]
-  #}
+  identity {
+    type = "UserAssigned"
+    identity_ids = [
+      var.uai_id
+    ]
+  }
 
   transparent_data_encryption_key_vault_key_id = azurerm_key_vault_key.generated.id
 
