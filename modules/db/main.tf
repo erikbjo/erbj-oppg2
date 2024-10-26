@@ -32,12 +32,6 @@ resource "azurerm_mssql_server_extended_auditing_policy" "main" {
   }
 }
 
-resource "azurerm_role_assignment" "audit" {
-  principal_id         = data.azurerm_client_config.current.object_id
-  role_definition_name = "SQL DB Contributor"
-  scope                = azurerm_mssql_server.main.id
-}
-
 resource "azurerm_mssql_database" "main" {
   name           = "example-db"
   server_id      = azurerm_mssql_server.main.id

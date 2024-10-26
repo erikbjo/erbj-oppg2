@@ -30,6 +30,11 @@ resource "azurerm_storage_account" "main" {
       retention_policy_days = 10
     }
   }
+
+  network_rules {
+    default_action = "Deny"
+    bypass = ["AzureServices"]
+  }
 }
 
 resource "azurerm_storage_account_customer_managed_key" "encryption" {
