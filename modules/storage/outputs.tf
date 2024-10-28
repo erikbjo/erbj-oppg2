@@ -23,3 +23,8 @@ output "storage_account_primary_connection_string" {
   description = "The primary connection string for the storage account"
   sensitive   = true
 }
+
+output "storage_container_id" {
+  value       = azurerm_storage_container.main.id
+  description = "The ID of the storage container"
+}

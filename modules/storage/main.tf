@@ -37,11 +37,22 @@ resource "azurerm_storage_account" "main" {
   }
 }
 
+resource "azurerm_role_assignment" "kv_crypto_officer_storage" {
+  scope                = var.key_vault_id
+  role_definition_name = "Key Vault Crypto Officer"
+  principal_id         = azurerm_storage_account.main.identity[0].principal_id
+}
+
 resource "azurerm_storage_account_customer_managed_key" "encryption" {
   storage_account_id = azurerm_storage_account.main.id
   key_vault_id       = var.key_vault_id
   key_name           = var.key_name
   key_version        = var.key_version
+
+  depends_on = [
+    azurerm_role_assignment.kv_crypto_officer_storage,
+    azurerm_private_dns_a_record.storage_dns_record
+  ]
 }
 
 resource "azurerm_storage_container" "main" {
@@ -65,5 +76,31 @@ resource "azurerm_private_endpoint" "storage" {
 
   depends_on = [
     azurerm_storage_account.main
+  ]
+}
+
+resource "azurerm_private_dns_zone" "storage_dns_zone" {
+  name                = "privatelink.blob.core.windows.net"
+  resource_group_name = var.resource_group_name
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "storage_dns_zone_link" {
+  name                  = "keyvault-dns-zone-link"
+  private_dns_zone_name = azurerm_private_dns_zone.storage_dns_zone.name
+  resource_group_name   = var.resource_group_name
+  virtual_network_id    = var.vnet_id
+  depends_on = [azurerm_private_dns_zone.storage_dns_zone]
+}
+
+resource "azurerm_private_dns_a_record" "storage_dns_record" {
+  name                = azurerm_storage_account.main.name
+  zone_name           = azurerm_private_dns_zone.storage_dns_zone.name
+  resource_group_name = var.resource_group_name
+  ttl                 = 300
+  records = [azurerm_private_endpoint.storage.private_service_connection[0].private_ip_address]
+
+  depends_on = [
+    azurerm_private_endpoint.storage,
+    azurerm_private_dns_zone.storage_dns_zone
   ]
 }

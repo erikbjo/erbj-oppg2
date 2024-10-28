@@ -27,8 +27,26 @@ variable "storage_account_identity_id" {
   nullable    = false
 }
 
+variable "storage_container_id" {
+  description = "The ID of the storage container"
+  type        = string
+  nullable    = false
+}
+
+variable "mssql_server_principal_id" {
+  description = "The principal ID of the SQL Server"
+  type        = string
+  nullable    = false
+}
+
 variable "subnet_id" {
   description = "The ID of the subnet to deploy a private endpoint to"
+  type        = string
+  nullable    = false
+}
+
+variable "vnet_id" {
+  description = "The ID of the virtual network to deploy the private endpoint to"
   type        = string
   nullable    = false
 }

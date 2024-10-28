@@ -29,6 +29,13 @@ resource "azurerm_mssql_server_extended_auditing_policy" "audit" {
   storage_account_access_key              = var.storage_account_access_key
   storage_account_access_key_is_secondary = false
   retention_in_days                       = 90
+
+  # depends_on = [
+  #   azurerm_role_assignment.blob_contributor,
+  #   # Other roles to control resourfce creation
+  #   azurerm_role_assignment.kv_crypto_officer_sql,
+  #   azurerm_role_assignment.kv_secrets_user_sql
+  # ]
 }
 
 resource "azurerm_mssql_database" "main" {
@@ -61,3 +68,22 @@ resource "azurerm_key_vault_key" "generated" {
 
   key_opts = ["unwrapKey", "wrapKey"]
 }
+
+# Moved to keyvault/access_policies.tf
+# resource "azurerm_role_assignment" "blob_contributor" {
+#   scope                = var.storage_container_id
+#   role_definition_name = "Storage Blob Data Contributor"
+#   principal_id         = azurerm_mssql_server.main.identity[0].principal_id
+# }
+#
+# resource "azurerm_role_assignment" "kv_crypto_officer_sql" {
+#   scope                = var.key_vault_id
+#   role_definition_name = "Key Vault Crypto Officer"
+#   principal_id         = azurerm_mssql_server.main.identity[0].principal_id
+# }
+#
+# resource "azurerm_role_assignment" "kv_secrets_user_sql" {
+#   scope                = var.key_vault_id
+#   role_definition_name = "Key Vault Secrets User"
+#   principal_id         = azurerm_mssql_server.main.identity[0].principal_id
+# }

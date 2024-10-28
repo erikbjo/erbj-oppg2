@@ -32,3 +32,15 @@ variable "storage_account_access_key" {
   type        = string
   nullable    = false
 }
+
+variable "storage_account_id" {
+  description = "The ID of the storage account"
+  type        = string
+  nullable    = false
+}
+
+variable "storage_container_id" {
+  description = "The ID of the storage container used for storing blobs from the database"
+  type        = string
+  nullable    = false
+}

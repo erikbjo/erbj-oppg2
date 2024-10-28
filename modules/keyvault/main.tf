@@ -15,39 +15,6 @@ resource "azurerm_key_vault" "main" {
     default_action = "Deny"
     bypass         = "AzureServices"
   }
-
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = data.azurerm_client_config.current.object_id
-
-    key_permissions = ["Get", "List", "Create", "Delete", "Update", "Recover", "Purge", "GetRotationPolicy"]
-    secret_permissions = ["Get", "List"]
-  }
-
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = data.azurerm_client_config.current.object_id
-
-    key_permissions = ["Get", "List", "WrapKey", "UnwrapKey"]
-    secret_permissions = ["Get", "List"]
-  }
-}
-
-resource "azurerm_key_vault_access_policy" "storage_account_access" {
-  key_vault_id = azurerm_key_vault.main.id
-  tenant_id    = data.azurerm_client_config.current.tenant_id
-  object_id    = var.storage_account_identity_id
-
-  key_permissions = [
-    "Get", "Create", "Delete", "List", "Restore", "Recover", "UnwrapKey", "WrapKey", "Purge", "Encrypt", "Decrypt",
-    "Sign", "Verify"
-  ]
-  secret_permissions = ["Get"]
-
-  depends_on = [
-    azurerm_key_vault.main,
-    azurerm_private_endpoint.main
-  ]
 }
 
 resource "azurerm_key_vault_key" "master" {
@@ -59,8 +26,9 @@ resource "azurerm_key_vault_key" "master" {
   key_opts = ["decrypt", "encrypt", "sign", "unwrapKey", "verify", "wrapKey"]
 
   depends_on = [
-    azurerm_key_vault_access_policy.storage_account_access,
-    azurerm_private_endpoint.main
+    #azurerm_key_vault_access_policy.storage_account_access,
+    azurerm_private_endpoint.main,
+    azurerm_private_dns_a_record.keyvault_dns_record
   ]
 }
 
@@ -76,6 +44,32 @@ resource "azurerm_private_endpoint" "main" {
     is_manual_connection           = false
     subresource_names = ["vault"]
   }
+}
+
+resource "azurerm_private_dns_zone" "keyvault_dns_zone" {
+  name                = "privatelink.vaultcore.azure.net"
+  resource_group_name = var.resource_group_name
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "keyvault_dns_zone_link" {
+  name                  = "keyvault-dns-zone-link"
+  private_dns_zone_name = azurerm_private_dns_zone.keyvault_dns_zone.name
+  resource_group_name   = var.resource_group_name
+  virtual_network_id    = var.vnet_id
+  depends_on = [azurerm_private_dns_zone.keyvault_dns_zone]
+}
+
+resource "azurerm_private_dns_a_record" "keyvault_dns_record" {
+  name                = azurerm_key_vault.main.name
+  zone_name           = azurerm_private_dns_zone.keyvault_dns_zone.name
+  resource_group_name = var.resource_group_name
+  ttl                 = 300
+  records = [azurerm_private_endpoint.main.private_service_connection[0].private_ip_address]
+
+  depends_on = [
+    azurerm_private_endpoint.main,
+    azurerm_private_dns_zone.keyvault_dns_zone
+  ]
 }
 
 # resource "azurerm_key_vault_access_policy" "sql_server_access" {

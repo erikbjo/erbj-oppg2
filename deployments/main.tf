@@ -20,16 +20,36 @@ module "network" {
   # subnet_count = 2
 }
 
-module "app" {
-  source              = "../modules/app"
-  location            = azurerm_resource_group.main.location
-  resource_group_name = azurerm_resource_group.main.name
-  tags                = local.tags
+# module "app" {
+#   source              = "../modules/app"
+#   location            = azurerm_resource_group.main.location
+#   resource_group_name = azurerm_resource_group.main.name
+#   tags                = local.tags
+#
+#   service_plan_name = format("%s-%s", local.naming_conventions.service_plan, local.suffix_kebab_case)
+#   linux_web_app_name = format("%s-%s", local.naming_conventions.linux_web_app, local.suffix_kebab_case)
+#   # worker_count = 3
+# }
 
-  service_plan_name = format("%s-%s", local.naming_conventions.service_plan, local.suffix_kebab_case)
-  linux_web_app_name = format("%s-%s", local.naming_conventions.linux_web_app, local.suffix_kebab_case)
-  # worker_count = 3
+module "keyvault" {
+  source                      = "../modules/keyvault"
+  location                    = azurerm_resource_group.main.location
+  resource_group_name         = azurerm_resource_group.main.name
+  tags                        = local.tags
+  subnet_id                   = module.network.subnet_ids[0]
+  vnet_id                     = module.network.vnet_id
+  storage_account_id          = module.storage.storage_account_id
+  storage_account_identity_id = module.storage.storage_account_identity_id
+  storage_container_id        = module.storage.storage_container_id
+  mssql_server_principal_id   = module.db.mssql_server_principal_id
+
+  key_vault_name = format("%s%s", local.naming_conventions.key_vault, local.suffix_mumblecase)
+
+  depends_on = [
+    module.network,
+  ]
 }
+
 
 module "db" {
   source                        = "../modules/db"
@@ -39,6 +59,14 @@ module "db" {
   key_vault_id                  = module.keyvault.key_vault_id
   storage_account_access_key    = module.storage.storage_account_primary_access_key
   storage_primary_blob_endpoint = module.storage.storage_account_blob_endpoint
+  storage_account_id            = module.storage.storage_account_id
+  storage_container_id          = module.storage.storage_container_id
+
+  depends_on = [
+    module.network,
+    module.keyvault,
+    module.storage,
+  ]
 }
 
 module "storage" {
@@ -55,16 +83,9 @@ module "storage" {
   private_endpoint_name = format("%s-%s", local.naming_conventions.private_endpoint, local.suffix_mumblecase)
   storage_account_name = format("%s%s", local.naming_conventions.storage_account, local.suffix_mumblecase)
   vnet_link_name = format("%s-%s", local.naming_conventions.vnet_link, local.suffix_kebab_case)
-}
 
-module "keyvault" {
-  source                      = "../modules/keyvault"
-  location                    = azurerm_resource_group.main.location
-  resource_group_name         = azurerm_resource_group.main.name
-  tags                        = local.tags
-  subnet_id                   = module.network.subnet_ids[0]
-  storage_account_id          = module.storage.storage_account_id
-  storage_account_identity_id = module.storage.storage_account_identity_id
-
-  key_vault_name = format("%s%s", local.naming_conventions.key_vault, local.suffix_mumblecase)
+  depends_on = [
+    module.network,
+    module.keyvault,
+  ]
 }
