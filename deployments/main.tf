@@ -66,7 +66,10 @@ module "db" {
   depends_on = [
     module.network,
     azurerm_key_vault.main,
-    azurerm_key_vault_key.master
+    azurerm_key_vault_key.master,
+    # azurerm_role_assignment.kv_crypto_officer_sql,
+    # azurerm_role_assignment.blob_contributor,
+    # azurerm_role_assignment.kv_secrets_user_sql,
   ]
 }
 
@@ -88,6 +91,6 @@ module "storage" {
   depends_on = [
     module.network,
     azurerm_key_vault.main,
-    azurerm_key_vault_key.master
+    azurerm_key_vault_key.master,
   ]
 }

@@ -139,3 +139,9 @@ resource "azurerm_role_assignment" "kv_secrets_user_sql" {
   role_definition_name = "Key Vault Secrets User"
   principal_id         = module.db.mssql_server_principal_id
 }
+
+resource "azurerm_role_assignment" "kv_crypto_officer_storage" {
+  scope                = azurerm_key_vault.main.id
+  role_definition_name = "Key Vault Crypto Officer"
+  principal_id         = module.storage.storage_account_identity_id
+}

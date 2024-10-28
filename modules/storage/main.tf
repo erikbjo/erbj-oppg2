@@ -37,12 +37,6 @@ resource "azurerm_storage_account" "main" {
   }
 }
 
-resource "azurerm_role_assignment" "kv_crypto_officer_storage" {
-  scope                = var.key_vault_id
-  role_definition_name = "Key Vault Crypto Officer"
-  principal_id         = azurerm_storage_account.main.identity[0].principal_id
-}
-
 resource "azurerm_storage_account_customer_managed_key" "encryption" {
   storage_account_id = azurerm_storage_account.main.id
   key_vault_id       = var.key_vault_id
@@ -50,7 +44,6 @@ resource "azurerm_storage_account_customer_managed_key" "encryption" {
   key_version        = var.key_version
 
   depends_on = [
-    azurerm_role_assignment.kv_crypto_officer_storage,
     azurerm_private_dns_a_record.storage_dns_record
   ]
 }
