@@ -44,3 +44,9 @@ variable "storage_container_id" {
   type        = string
   nullable    = false
 }
+
+variable "master_key_id" {
+  description = "The ID of the master key in the key vault"
+  type        = string
+  nullable    = false
+}

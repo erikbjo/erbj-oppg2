@@ -51,22 +51,12 @@ resource "azurerm_mssql_database" "main" {
   ledger_enabled = true
   tags           = var.tags
 
-  transparent_data_encryption_key_vault_key_id = azurerm_key_vault_key.generated.id
+  transparent_data_encryption_key_vault_key_id = var.master_key_id
 
   # prevent the possibility of accidental data loss
   lifecycle {
     prevent_destroy = true
   }
-}
-
-resource "azurerm_key_vault_key" "generated" {
-  name            = "mssql-tde-key"
-  key_vault_id    = var.key_vault_id
-  key_type        = "RSA"
-  key_size        = 2048
-  expiration_date = "2024-12-01T08:00:00+00:00"
-
-  key_opts = ["unwrapKey", "wrapKey"]
 }
 
 # Moved to keyvault/access_policies.tf
