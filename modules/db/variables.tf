@@ -15,12 +15,6 @@ variable "resource_group_name" {
   nullable    = false
 }
 
-variable "key_vault_id" {
-  description = "The ID of the key vault"
-  type        = string
-  nullable    = false
-}
-
 variable "storage_primary_blob_endpoint" {
   description = "The primary blob endpoint for the storage account"
   type        = string
@@ -41,12 +35,6 @@ variable "storage_account_id" {
 
 variable "storage_container_id" {
   description = "The ID of the storage container used for storing blobs from the database"
-  type        = string
-  nullable    = false
-}
-
-variable "master_key_id" {
-  description = "The ID of the master key in the key vault"
   type        = string
   nullable    = false
 }

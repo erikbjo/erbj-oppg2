@@ -37,17 +37,6 @@ resource "azurerm_storage_account" "main" {
   }
 }
 
-resource "azurerm_storage_account_customer_managed_key" "encryption" {
-  storage_account_id = azurerm_storage_account.main.id
-  key_vault_id       = var.key_vault_id
-  key_name           = var.key_name
-  key_version        = var.key_version
-
-  depends_on = [
-    azurerm_private_dns_a_record.storage_dns_record
-  ]
-}
-
 resource "azurerm_storage_container" "main" {
   name                  = "blobs"
   storage_account_name  = azurerm_storage_account.main.name
@@ -75,14 +64,6 @@ resource "azurerm_private_endpoint" "storage" {
 resource "azurerm_private_dns_zone" "storage_dns_zone" {
   name                = "privatelink.blob.core.windows.net"
   resource_group_name = var.resource_group_name
-}
-
-resource "azurerm_private_dns_zone_virtual_network_link" "storage_dns_zone_link" {
-  name                  = "keyvault-dns-zone-link"
-  private_dns_zone_name = azurerm_private_dns_zone.storage_dns_zone.name
-  resource_group_name   = var.resource_group_name
-  virtual_network_id    = var.vnet_id
-  depends_on = [azurerm_private_dns_zone.storage_dns_zone]
 }
 
 resource "azurerm_private_dns_a_record" "storage_dns_record" {

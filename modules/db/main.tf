@@ -51,29 +51,8 @@ resource "azurerm_mssql_database" "main" {
   ledger_enabled = true
   tags           = var.tags
 
-  transparent_data_encryption_key_vault_key_id = var.master_key_id
-
   # prevent the possibility of accidental data loss
   lifecycle {
     prevent_destroy = true
   }
 }
-
-# Moved to keyvault/access_policies.tf
-# resource "azurerm_role_assignment" "blob_contributor" {
-#   scope                = var.storage_container_id
-#   role_definition_name = "Storage Blob Data Contributor"
-#   principal_id         = azurerm_mssql_server.main.identity[0].principal_id
-# }
-#
-# resource "azurerm_role_assignment" "kv_crypto_officer_sql" {
-#   scope                = var.key_vault_id
-#   role_definition_name = "Key Vault Crypto Officer"
-#   principal_id         = azurerm_mssql_server.main.identity[0].principal_id
-# }
-#
-# resource "azurerm_role_assignment" "kv_secrets_user_sql" {
-#   scope                = var.key_vault_id
-#   role_definition_name = "Key Vault Secrets User"
-#   principal_id         = azurerm_mssql_server.main.identity[0].principal_id
-# }

@@ -31,45 +31,18 @@ module "network" {
 #   # worker_count = 3
 # }
 
-# module "keyvault" {
-#   source                      = "../modules/keyvault"
-#   location                    = azurerm_resource_group.main.location
-#   resource_group_name         = azurerm_resource_group.main.name
-#   tags                        = local.tags
-#   subnet_id                   = module.network.subnet_ids[0]
-#   vnet_id                     = module.network.vnet_id
-#   storage_account_id          = module.storage.storage_account_id
-#   storage_account_identity_id = module.storage.storage_account_identity_id
-#   storage_container_id        = module.storage.storage_container_id
-#   mssql_server_principal_id   = module.db.mssql_server_principal_id
-#
-#   key_vault_name = format("%s%s", local.naming_conventions.key_vault, local.suffix_mumblecase)
-#
-#   depends_on = [
-#     module.network,
-#   ]
-# }
-
-
 module "db" {
   source                        = "../modules/db"
   location                      = azurerm_resource_group.main.location
   resource_group_name           = azurerm_resource_group.main.name
   tags                          = local.tags
-  key_vault_id                  = azurerm_key_vault.main.id
   storage_account_access_key    = module.storage.storage_account_primary_access_key
   storage_primary_blob_endpoint = module.storage.storage_account_blob_endpoint
   storage_account_id            = module.storage.storage_account_id
   storage_container_id          = module.storage.storage_container_id
-  master_key_id                 = azurerm_key_vault_key.master.id
 
   depends_on = [
     module.network,
-    azurerm_key_vault.main,
-    azurerm_key_vault_key.master,
-    # azurerm_role_assignment.kv_crypto_officer_sql,
-    # azurerm_role_assignment.blob_contributor,
-    # azurerm_role_assignment.kv_secrets_user_sql,
   ]
 }
 
@@ -80,9 +53,6 @@ module "storage" {
   tags                = local.tags
   subnet_id           = module.network.subnet_ids[0]
   vnet_id             = module.network.vnet_id
-  key_vault_id        = azurerm_key_vault.main.id
-  key_name            = azurerm_key_vault_key.master.name
-  key_version         = azurerm_key_vault_key.master.version
 
   private_endpoint_name = format("%s-%s", local.naming_conventions.private_endpoint, local.suffix_mumblecase)
   storage_account_name = format("%s%s", local.naming_conventions.storage_account, local.suffix_mumblecase)
@@ -90,7 +60,5 @@ module "storage" {
 
   depends_on = [
     module.network,
-    azurerm_key_vault.main,
-    azurerm_key_vault_key.master,
   ]
 }
