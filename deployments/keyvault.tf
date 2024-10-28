@@ -38,6 +38,11 @@ resource "azurerm_private_endpoint" "main" {
     is_manual_connection           = false
     subresource_names = ["vault"]
   }
+
+  private_dns_zone_group {
+    name = "keyvault-dns-zone-group"
+    private_dns_zone_ids = [azurerm_private_dns_zone.keyvault_dns_zone.id]
+  }
 }
 
 resource "azurerm_private_dns_zone" "keyvault_dns_zone" {
