@@ -25,7 +25,7 @@ jobs:
         uses: './.github/actions/tfsetup'
         with:
           AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
-          WORKSPACE: ${{ github.workflow }}
+          WORKSPACE: ${{ env.WORKSPACE }}
           WORKING_DIR: ${{ env.WORKING_DIR }}
 
       - name: 'Terraform destroy'
