@@ -42,9 +42,13 @@ jobs:
         uses: './.github/actions/checkovwithseveritylevel'
         with:
           WORKING_DIR: ${{ env.WORKING_DIR }}
-          FAIL_ON_LEVEL: 'HIGH'
+          FAIL_ON_LEVEL: 'MEDIUM'
 
-      # TODO: Step for tfsec scan
+      - name: 'Tfsec scan'
+        id: tfsec
+        uses: aquasecurity/tfsec-action@v1.0.3
+        with:
+          additional_args: '--minimum-severity MEDIUM --workspace ${{ env.WORKSPACE }}'
 
       - name: 'Terraform plan'
         id: plan

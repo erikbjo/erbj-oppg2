@@ -1,5 +1,6 @@
 name: 'Checkov with severity level'
-description: 'Runs checkov and compares the severity levels of the results to a given severity level.'
+description: 'Runs checkov and compares the severity levels of the results to a given severity level. 
+NOTE: This action does not fail on checkov errors, check report for details.'
 author: 'https://github.com/erikbjo'
 
 inputs:
