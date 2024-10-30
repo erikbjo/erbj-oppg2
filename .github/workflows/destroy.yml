@@ -25,6 +25,7 @@ jobs:
         with:
           AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
           WORKSPACE: ${{ github.workflow }}
+          WORKING_DIR: ${{ env.WORKING_DIR }}
 
       - name: 'Terraform destroy'
         id: destroy
