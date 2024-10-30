@@ -1,6 +1,6 @@
 variable "tags" {
   description = "A map of tags to apply to resources"
-  type        = map(string)
+  type = map(string)
 }
 
 variable "location" {
@@ -17,18 +17,6 @@ variable "resource_group_name" {
 
 variable "subnet_id" {
   description = "The ID of the subnet to deploy a private endpoint to"
-  type        = string
-  nullable    = false
-}
-
-variable "vnet_id" {
-  description = "The ID of the virtual network to deploy a dns zone to"
-  type        = string
-  nullable    = false
-}
-
-variable "vnet_link_name" {
-  description = "The name of the virtual network link"
   type        = string
   nullable    = false
 }

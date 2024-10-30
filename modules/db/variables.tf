@@ -1,6 +1,6 @@
 variable "tags" {
   description = "A map of tags to apply to resources"
-  type        = map(string)
+  type = map(string)
 }
 
 variable "location" {
@@ -27,14 +27,14 @@ variable "storage_account_access_key" {
   nullable    = false
 }
 
-variable "storage_account_id" {
-  description = "The ID of the storage account"
+variable "subnet_id" {
+  description = "The ID of the subnet to deploy the private endpoint to"
   type        = string
   nullable    = false
 }
 
-variable "storage_container_id" {
-  description = "The ID of the storage container used for storing blobs from the database"
+variable "private_endpoint_name" {
+  description = "The name of the private endpoint"
   type        = string
   nullable    = false
 }

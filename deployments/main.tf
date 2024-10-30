@@ -1,11 +1,7 @@
 resource "azurerm_resource_group" "main" {
-  name     = format("%s-%s", local.naming_conventions.resource_group, local.suffix_kebab_case)
+  name = format("%s-%s", local.naming_conventions.resource_group, local.suffix_kebab_case)
   location = var.location
   tags     = local.tags
-}
-
-data "azurerm_role_definition" "contributor" {
-  name = "Contributor"
 }
 
 ### Modules
@@ -31,6 +27,21 @@ module "network" {
 #   # worker_count = 3
 # }
 
+module "storage" {
+  source              = "../modules/storage"
+  resource_group_name = azurerm_resource_group.main.name
+  location            = azurerm_resource_group.main.location
+  tags                = local.tags
+  subnet_id           = module.network.subnet_ids[0]
+
+  private_endpoint_name = format("%s-storage-%s", local.naming_conventions.private_endpoint, local.suffix_mumblecase)
+  storage_account_name = format("%s%s", local.naming_conventions.storage_account, local.suffix_mumblecase)
+
+  depends_on = [
+    module.network,
+  ]
+}
+
 module "db" {
   source                        = "../modules/db"
   location                      = azurerm_resource_group.main.location
@@ -38,27 +49,12 @@ module "db" {
   tags                          = local.tags
   storage_account_access_key    = module.storage.storage_account_primary_access_key
   storage_primary_blob_endpoint = module.storage.storage_account_blob_endpoint
-  storage_account_id            = module.storage.storage_account_id
-  storage_container_id          = module.storage.storage_container_id
+  subnet_id                     = module.network.subnet_ids[0]
+
+  private_endpoint_name = format("%s-db-%s", local.naming_conventions.private_endpoint, local.suffix_mumblecase)
 
   depends_on = [
     module.network,
-  ]
-}
-
-module "storage" {
-  source              = "../modules/storage"
-  resource_group_name = azurerm_resource_group.main.name
-  location            = azurerm_resource_group.main.location
-  tags                = local.tags
-  subnet_id           = module.network.subnet_ids[0]
-  vnet_id             = module.network.vnet_id
-
-  private_endpoint_name = format("%s-%s", local.naming_conventions.private_endpoint, local.suffix_mumblecase)
-  storage_account_name  = format("%s%s", local.naming_conventions.storage_account, local.suffix_mumblecase)
-  vnet_link_name        = format("%s-%s", local.naming_conventions.vnet_link, local.suffix_kebab_case)
-
-  depends_on = [
-    module.network,
+    module.storage,
   ]
 }

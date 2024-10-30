@@ -8,7 +8,7 @@ resource "random_string" "random" {
 }
 
 resource "azurerm_mssql_server" "main" {
-  name                          = format("erbjmssql-%s", random_string.random.result)
+  name = format("mssql-%s", random_string.random.result)
   resource_group_name           = var.resource_group_name
   location                      = var.location
   version                       = "12.0"
@@ -29,25 +29,18 @@ resource "azurerm_mssql_server_extended_auditing_policy" "audit" {
   storage_account_access_key              = var.storage_account_access_key
   storage_account_access_key_is_secondary = false
   retention_in_days                       = 90
-
-  # depends_on = [
-  #   azurerm_role_assignment.blob_contributor,
-  #   # Other roles to control resourfce creation
-  #   azurerm_role_assignment.kv_crypto_officer_sql,
-  #   azurerm_role_assignment.kv_secrets_user_sql
-  # ]
 }
 
 resource "azurerm_mssql_database" "main" {
-  name           = "example-db"
+  name           = "operaterra-db"
   server_id      = azurerm_mssql_server.main.id
   collation      = "SQL_Latin1_General_CP1_CI_AS"
   license_type   = "LicenseIncluded"
-  max_size_gb    = 4
-  read_scale     = true
+  max_size_gb    = 1
   sku_name       = "S0"
-  zone_redundant = true
   enclave_type   = "VBS"
+  read_scale     = true
+  zone_redundant = true
   ledger_enabled = true
   tags           = var.tags
 
