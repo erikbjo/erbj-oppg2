@@ -4,6 +4,15 @@ resource "azurerm_resource_group" "main" {
   tags     = local.tags
 }
 
+data "azurerm_client_config" "current" {}
+
+# Microsoft.Authorization/roleAssignments/write
+resource "azurerm_role_assignment" "current" {
+  scope                = azurerm_resource_group.main.id
+  role_definition_name = "Owner"
+  principal_id         = data.azurerm_client_config.current.object_id
+}
+
 ### Modules
 module "network" {
   source              = "../modules/network"
