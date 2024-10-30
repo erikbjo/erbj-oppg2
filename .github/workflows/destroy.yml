@@ -10,6 +10,7 @@ on:
 env:
   WORKING_DIR: 'deployments'
   WORKSPACE: ${{ inputs.workspace }}
+  TF_VAR_subscription_id: ${{ secrets.SUBSCRIPTION_ID }}
 
 jobs:
   destroy:
