@@ -33,7 +33,7 @@ resource "azurerm_storage_account" "main" {
 
   network_rules {
     default_action = "Deny"
-    bypass = ["AzureServices"]
+    bypass         = ["AzureServices"]
   }
 }
 
@@ -52,7 +52,7 @@ resource "azurerm_private_endpoint" "storage" {
   private_service_connection {
     name                           = "storage-endpoint-connection"
     private_connection_resource_id = azurerm_storage_account.main.id
-    subresource_names = ["blob"]
+    subresource_names              = ["blob"]
     is_manual_connection           = false
   }
 
@@ -71,7 +71,7 @@ resource "azurerm_private_dns_a_record" "storage_dns_record" {
   zone_name           = azurerm_private_dns_zone.storage_dns_zone.name
   resource_group_name = var.resource_group_name
   ttl                 = 300
-  records = [azurerm_private_endpoint.storage.private_service_connection[0].private_ip_address]
+  records             = [azurerm_private_endpoint.storage.private_service_connection[0].private_ip_address]
 
   depends_on = [
     azurerm_private_endpoint.storage,
