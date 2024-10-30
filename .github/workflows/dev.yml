@@ -59,7 +59,7 @@ jobs:
         uses: actions/cache/save@v4.1.2
         with:
           path: ${{ env.WORKING_DIR }}/${{ env.WORKSPACE }}.tfplan
-          key: tfplan-${{ github.sha }}
+          key: tfplan-${{ github.run_id }}
 
   apply:
     needs: validate
@@ -83,7 +83,7 @@ jobs:
         uses: actions/cache/restore@v4.1.2
         with:
           path: ${{ env.WORKING_DIR }}/${{ env.WORKSPACE }}.tfplan
-          key: tfplan-${{ github.sha }}
+          key: tfplan-${{ github.run_id }}
 
       - name: 'Terraform apply'
         id: apply

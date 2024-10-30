@@ -1,5 +1,5 @@
 resource "azurerm_resource_group" "main" {
-  name = format("%s-%s", local.naming_conventions.resource_group, local.suffix_kebab_case)
+  name     = format("%s-%s", local.naming_conventions.resource_group, local.suffix_kebab_case)
   location = var.location
   tags     = local.tags
 }
@@ -55,8 +55,8 @@ module "storage" {
   vnet_id             = module.network.vnet_id
 
   private_endpoint_name = format("%s-%s", local.naming_conventions.private_endpoint, local.suffix_mumblecase)
-  storage_account_name = format("%s%s", local.naming_conventions.storage_account, local.suffix_mumblecase)
-  vnet_link_name = format("%s-%s", local.naming_conventions.vnet_link, local.suffix_kebab_case)
+  storage_account_name  = format("%s%s", local.naming_conventions.storage_account, local.suffix_mumblecase)
+  vnet_link_name        = format("%s-%s", local.naming_conventions.vnet_link, local.suffix_kebab_case)
 
   depends_on = [
     module.network,
