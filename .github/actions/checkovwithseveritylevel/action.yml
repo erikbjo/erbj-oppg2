@@ -12,6 +12,10 @@ inputs:
     description: 'Fail if severity level is equal or higher than this. Ex: LOW, MEDIUM, HIGH'
     required: true
 
+  SOFT_FAIL:
+    description: 'Wont fail the action if checkov fails. true or false'
+    required: true
+
 runs:
   using: 'composite'
   steps:
@@ -39,6 +43,7 @@ runs:
       env:
         LINKS: ${{ steps.list_links.outputs.LINKS }}
         FAIL_ON_LEVEL: ${{ inputs.FAIL_ON_LEVEL }}
+        SOFT_FAIL: ${{ inputs.SOFT_FAIL }}
       run: |
         chmod +x .github/actions/checkovwithseveritylevel/checkseveritylevels.sh
-        ./.github/actions/checkovwithseveritylevel/checkseveritylevels.sh $LINKS $FAIL_ON_LEVEL
+        ./.github/actions/checkovwithseveritylevel/checkseveritylevels.sh $LINKS $FAIL_ON_LEVEL $SOFT_FAIL

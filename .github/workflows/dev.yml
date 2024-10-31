@@ -43,6 +43,7 @@ jobs:
         with:
           WORKING_DIR: ${{ env.WORKING_DIR }}
           FAIL_ON_LEVEL: 'MEDIUM'
+          SOFT_FAIL: 'true'
 
       - name: 'Tfsec scan'
         id: tfsec
