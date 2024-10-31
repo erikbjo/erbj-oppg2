@@ -9,8 +9,8 @@ module "network" {
   source              = "../modules/network"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
-  tags                = local.tags
   subnet_name_prefix  = local.naming_conventions.subnet
+  tags                = local.tags
 
   vnet_name = format("%s-%s", local.naming_conventions.virtual_network, local.suffix_kebab_case)
   # subnet_count = 2
@@ -35,8 +35,8 @@ module "storage" {
   source              = "../modules/storage"
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
-  tags                = local.tags
   subnet_id           = module.network.subnet_ids[0]
+  tags                = local.tags
 
   private_endpoint_name = format("%s-storage-%s", local.naming_conventions.private_endpoint, local.suffix_mumblecase)
   storage_account_name = format("%s%s", local.naming_conventions.storage_account, local.suffix_mumblecase)
