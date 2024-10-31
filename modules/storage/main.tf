@@ -6,8 +6,8 @@ resource "azurerm_storage_account" "main" {
   account_replication_type        = "GRS"
   min_tls_version                 = "TLS1_2"
   local_user_enabled              = false
-  public_network_access_enabled   = false
-  allow_nested_items_to_be_public = false
+  public_network_access_enabled   = true
+  allow_nested_items_to_be_public = true
   https_traffic_only_enabled      = true
   tags                            = var.tags
 
@@ -31,24 +31,17 @@ resource "azurerm_storage_account" "main" {
     }
   }
 
-  network_rules {
-    default_action = "Deny"
-    bypass = ["AzureServices"]
-  }
+  # TODO: Find a good way to implement network rules
+  # error when uncommenting this block:
+  # retrieving Container "blobs" ... status 403
+  # network_rules {
+  #   default_action = "Deny"
+  #   bypass = ["AzureServices"]
+  # }
 }
 
 resource "azurerm_storage_container" "main" {
   name                  = "blobs"
   storage_account_name  = azurerm_storage_account.main.name
   container_access_type = "private"
-
-  depends_on = [
-    azurerm_role_assignment.storage_blob_data_contributor
-  ]
-}
-
-resource "azurerm_role_assignment" "storage_blob_data_contributor" {
-  principal_id         = azurerm_storage_account.main.identity[0].principal_id
-  role_definition_name = "Storage Blob Data Contributor"
-  scope                = azurerm_storage_account.main.id
 }

@@ -39,13 +39,12 @@ resource "azurerm_mssql_database" "main" {
   max_size_gb    = 1
   sku_name       = "S0"
   enclave_type   = "VBS"
-  read_scale     = true
-  zone_redundant = true
+  read_scale     = false
+  zone_redundant = false
   ledger_enabled = true
   tags           = var.tags
 
-  # prevent the possibility of accidental data loss
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 }

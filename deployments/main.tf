@@ -4,15 +4,6 @@ resource "azurerm_resource_group" "main" {
   tags     = local.tags
 }
 
-data "azurerm_client_config" "current" {}
-
-# Microsoft.Authorization/roleAssignments/write
-resource "azurerm_role_assignment" "current" {
-  scope                = azurerm_resource_group.main.id
-  role_definition_name = "Owner"
-  principal_id         = data.azurerm_client_config.current.object_id
-}
-
 ### Modules
 module "network" {
   source              = "../modules/network"
@@ -25,16 +16,20 @@ module "network" {
   # subnet_count = 2
 }
 
-# module "app" {
-#   source              = "../modules/app"
-#   location            = azurerm_resource_group.main.location
-#   resource_group_name = azurerm_resource_group.main.name
-#   tags                = local.tags
-#
-#   service_plan_name = format("%s-%s", local.naming_conventions.service_plan, local.suffix_kebab_case)
-#   linux_web_app_name = format("%s-%s", local.naming_conventions.linux_web_app, local.suffix_kebab_case)
-#   # worker_count = 3
-# }
+module "app" {
+  source              = "../modules/app"
+  location            = azurerm_resource_group.main.location
+  resource_group_name = azurerm_resource_group.main.name
+  tags                = local.tags
+
+  service_plan_name = format("%s-%s", local.naming_conventions.service_plan, local.suffix_kebab_case)
+  linux_web_app_name = format("%s-%s", local.naming_conventions.linux_web_app, local.suffix_kebab_case)
+  # worker_count = 3
+
+  depends_on = [
+    module.network,
+  ]
+}
 
 module "storage" {
   source              = "../modules/storage"
