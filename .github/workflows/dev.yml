@@ -2,15 +2,13 @@ name: 'dev'
 on:
   workflow_dispatch:
 
-  pull_request:
+  push:
     branches:
       - dev
     paths-ignore:
       - '*.md'
       - '.gitignore'
       - '*.yml'
-    types:
-      - closed
 
 permissions:
   contents: read
@@ -18,8 +16,9 @@ permissions:
 
 env:
   TF_VAR_subscription_id: ${{ secrets.SUBSCRIPTION_ID }}
-  WORKING_DIR: '.'
+  WORKING_DIR: 'deployments'
   GH_TOKEN: ${{ github.token }}
+  WORKSPACE: ${{ github.workflow }}
 
 jobs:
   validate:
@@ -35,27 +34,39 @@ jobs:
         uses: './.github/actions/tfsetup'
         with:
           AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
-          WORKSPACE: ${{ github.workflow }}
+          WORKSPACE: ${{ env.WORKSPACE }}
+          WORKING_DIR: ${{ env.WORKING_DIR }}
 
       - name: 'Checkov with severity level'
         id: checkov
         uses: './.github/actions/checkovwithseveritylevel'
         with:
           WORKING_DIR: ${{ env.WORKING_DIR }}
-          FAIL_ON_LEVEL: 'HIGH'
+          FAIL_ON_LEVEL: 'MEDIUM'
+          SOFT_FAIL: 'true'
 
-      # TODO: Step for tfsec scan
+      - name: 'Tfsec scan'
+        id: tfsec
+        uses: aquasecurity/tfsec-action@v1.0.3
+        with:
+          additional_args: '--minimum-severity MEDIUM --workspace ${{ env.WORKSPACE }}'
 
       - name: 'Terraform plan'
         id: plan
-        run: terraform plan -out=tfplan
+        run: terraform plan -out=${{ env.WORKSPACE }}.tfplan
+        working-directory: ${{ env.WORKING_DIR }}
 
-      # TODO: Step for uploading and accepting the plan, before new job for apply
+      - name: 'Save tfplan'
+        uses: actions/cache/save@v4.1.2
+        with:
+          path: ${{ env.WORKING_DIR }}/${{ env.WORKSPACE }}.tfplan
+          key: tfplan-${{ github.run_id }}
 
   apply:
     needs: validate
     runs-on: ubuntu-latest
     name: 'apply'
+    environment: 'dev'
     steps:
       - name: 'Checkout'
         id: checkout
@@ -66,12 +77,18 @@ jobs:
         uses: './.github/actions/tfsetup'
         with:
           AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
-          WORKSPACE: ${{ github.workflow }}
+          WORKSPACE: ${{ env.WORKSPACE }}
+          WORKING_DIR: ${{ env.WORKING_DIR }}
 
-      # TODO: Download tfplan from validate job
+      - name: Restore cached source
+        uses: actions/cache/restore@v4.1.2
+        with:
+          path: ${{ env.WORKING_DIR }}/${{ env.WORKSPACE }}.tfplan
+          key: tfplan-${{ github.run_id }}
 
       - name: 'Terraform apply'
         id: apply
-        run: terraform apply -auto-approve tfplan
+        run: terraform apply -auto-approve ${{ env.WORKSPACE }}.tfplan
+        working-directory: ${{ env.WORKING_DIR }}
 
   # Eventual job for testing the infrastructure

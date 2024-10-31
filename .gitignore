@@ -4,6 +4,8 @@
 *.plan
 *.tfplan
 **/**/tfplan
+deployments/**tfvars**
+!deployments/terraform.tfvars.env.example
 
 ### macOS template
 # General
