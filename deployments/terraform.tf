@@ -11,8 +11,8 @@ terraform {
   }
 
   backend "azurerm" {
-    resource_group_name  = "rg-erbj-backend"
-    storage_account_name = "saerbjbackend"
+    resource_group_name  = "operaterra-backend"
+    storage_account_name = "saoperaterrabackend"
     container_name       = "terraformstate"
     key                  = "operaterra.tfstate"
   }

@@ -18,8 +18,9 @@ permissions:
 
 env:
   TF_VAR_subscription_id: ${{ secrets.SUBSCRIPTION_ID }}
-  WORKING_DIR: '.'
+  WORKING_DIR: 'deployments'
   GH_TOKEN: ${{ github.token }}
+  WORKSPACE: ${{ github.workflow }}
 
 jobs:
   validate:
@@ -30,10 +31,64 @@ jobs:
         id: checkout
         uses: actions/checkout@v4.1.7
 
+      - name: 'Setup Terraform with Azure credentials'
+        id: setup
+        uses: './.github/actions/tfsetup'
+        with:
+          AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+          WORKSPACE: ${{ env.WORKSPACE }}
+          WORKING_DIR: ${{ env.WORKING_DIR }}
+
+      - name: 'Checkov with severity level'
+        id: checkov
+        uses: './.github/actions/checkovwithseveritylevel'
+        with:
+          WORKING_DIR: ${{ env.WORKING_DIR }}
+          FAIL_ON_LEVEL: 'MEDIUM'
+          SOFT_FAIL: 'true'
+
+      - name: 'Tfsec scan'
+        id: tfsec
+        uses: aquasecurity/tfsec-action@v1.0.3
+        with:
+          additional_args: '--minimum-severity MEDIUM --workspace ${{ env.WORKSPACE }}'
+
+      - name: 'Terraform plan'
+        id: plan
+        run: terraform plan -out=${{ env.WORKSPACE }}.tfplan
+        working-directory: ${{ env.WORKING_DIR }}
+
+      - name: 'Save tfplan'
+        uses: actions/cache/save@v4.1.2
+        with:
+          path: ${{ env.WORKING_DIR }}/${{ env.WORKSPACE }}.tfplan
+          key: tfplan-${{ github.run_id }}
+
   apply:
+    needs: validate
     runs-on: ubuntu-latest
     name: 'apply'
+    environment: 'stage'
     steps:
       - name: 'Checkout'
         id: checkout
         uses: actions/checkout@v4.1.7
+
+      - name: 'Setup Terraform with Azure credentials'
+        id: setup
+        uses: './.github/actions/tfsetup'
+        with:
+          AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+          WORKSPACE: ${{ env.WORKSPACE }}
+          WORKING_DIR: ${{ env.WORKING_DIR }}
+
+      - name: Restore cached source
+        uses: actions/cache/restore@v4.1.2
+        with:
+          path: ${{ env.WORKING_DIR }}/${{ env.WORKSPACE }}.tfplan
+          key: tfplan-${{ github.run_id }}
+
+      - name: 'Terraform apply'
+        id: apply
+        run: terraform apply -auto-approve ${{ env.WORKSPACE }}.tfplan
+        working-directory: ${{ env.WORKING_DIR }}

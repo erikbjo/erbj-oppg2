@@ -1,0 +1,49 @@
+name: 'Checkov with severity level'
+description: 'Runs checkov and compares the severity levels of the results to a given severity level. 
+NOTE: This action does not fail on checkov errors, check report for details.'
+author: 'https://github.com/erikbjo'
+
+inputs:
+  WORKING_DIR:
+    description: 'The directory to run checkov in.'
+    required: true
+
+  FAIL_ON_LEVEL:
+    description: 'Fail if severity level is equal or higher than this. Ex: LOW, MEDIUM, HIGH'
+    required: true
+
+  SOFT_FAIL:
+    description: 'Wont fail the action if checkov fails. true or false'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: 'Checkov scan'
+      id: checkov
+      uses: bridgecrewio/checkov-action@master
+      with:
+        directory: ${{ inputs.WORKING_DIR }}
+        output_format: 'github_failed_only'
+        download_external_modules: true
+        output_file_path: 'checkov-report,'
+        soft_fail: true
+
+    - name: 'Parse links from checkov report'
+      id: list_links
+      shell: bash
+      run: |
+        LINKS=$(grep -oP 'https://docs.prismacloud.io[^\)]+' checkov-report)
+        LINKS=$(echo "$LINKS" | tr '\n' ',' | sed 's/,$//')
+        echo "LINKS=$LINKS" | tee -a $GITHUB_OUTPUT
+
+    - name: 'Check Severity Levels'
+      id: check_severity_level
+      shell: bash
+      env:
+        LINKS: ${{ steps.list_links.outputs.LINKS }}
+        FAIL_ON_LEVEL: ${{ inputs.FAIL_ON_LEVEL }}
+        SOFT_FAIL: ${{ inputs.SOFT_FAIL }}
+      run: |
+        chmod +x .github/actions/checkovwithseveritylevel/checkseveritylevels.sh
+        ./.github/actions/checkovwithseveritylevel/checkseveritylevels.sh $LINKS $FAIL_ON_LEVEL $SOFT_FAIL
