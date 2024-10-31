@@ -21,6 +21,19 @@ env:
   WORKSPACE: ${{ github.workflow }}
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: 'validate'
+    steps:
+      - name: 'Action debug'
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+
+      - name: 'Fine debug'
+        run: echo "${{ github.event_name }} ${{ github.event.action }} ${{ github.event.pull_request.merged }}"
+
+
   validate:
     runs-on: ubuntu-latest
     name: 'validate'
