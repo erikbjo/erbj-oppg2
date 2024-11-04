@@ -12,7 +12,7 @@ locals {
     client  = "OperaTerra"
   }
 
-  random_string = random_string.random_string_locals.result
+  random_string     = random_string.random_string_locals.result
   suffix_kebab_case = format("%s-%s-%s-%s", local.tags.owner, local.tags.project, terraform.workspace, local.random_string)
   # mumblecase is used for Azure resources that require only lowercase letters (storage account names, etc.)
   suffix_mumblecase = format("%s%s%s%s", local.tags.owner, local.tags.project, terraform.workspace, local.random_string)

@@ -1,5 +1,5 @@
 resource "azurerm_resource_group" "main" {
-  name = format("%s-%s", local.naming_conventions.resource_group, local.suffix_kebab_case)
+  name     = format("%s-%s", local.naming_conventions.resource_group, local.suffix_kebab_case)
   location = var.location
   tags     = local.tags
 }
@@ -23,9 +23,9 @@ module "app" {
   subnet_prefix       = module.network.app_subnet_prefix
   tags                = local.tags
 
-  app_gateway_name = format("%s-%s", local.naming_conventions.app_gateway, local.suffix_kebab_case)
-  public_ip_name = format("%s-%s", local.naming_conventions.public_ip, local.suffix_kebab_case)
-  service_plan_name = format("%s-%s", local.naming_conventions.service_plan, local.suffix_kebab_case)
+  app_gateway_name   = format("%s-%s", local.naming_conventions.app_gateway, local.suffix_kebab_case)
+  public_ip_name     = format("%s-%s", local.naming_conventions.public_ip, local.suffix_kebab_case)
+  service_plan_name  = format("%s-%s", local.naming_conventions.service_plan, local.suffix_kebab_case)
   linux_web_app_name = format("%s-%s", local.naming_conventions.linux_web_app, local.suffix_kebab_case)
   # worker_count = 3
 
@@ -42,7 +42,7 @@ module "storage" {
   tags                = local.tags
 
   private_endpoint_name = format("%s-storage-%s", local.naming_conventions.private_endpoint, local.suffix_mumblecase)
-  storage_account_name = format("%s%s", local.naming_conventions.storage_account, local.suffix_mumblecase)
+  storage_account_name  = format("%s%s", local.naming_conventions.storage_account, local.suffix_mumblecase)
 
   depends_on = [
     module.network,

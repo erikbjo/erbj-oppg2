@@ -8,7 +8,7 @@ resource "random_string" "random" {
 }
 
 resource "azurerm_mssql_server" "main" {
-  name = format("mssql-%s", random_string.random.result)
+  name                          = format("mssql-%s", random_string.random.result)
   resource_group_name           = var.resource_group_name
   location                      = var.location
   version                       = "12.0"

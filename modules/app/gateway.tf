@@ -51,7 +51,7 @@ resource "azurerm_application_gateway" "app_gateway" {
     pick_host_name_from_backend_http_settings = true
 
     match {
-      body = ""
+      body        = ""
       status_code = [200]
     }
   }
