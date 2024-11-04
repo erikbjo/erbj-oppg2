@@ -15,7 +15,6 @@ resource "azurerm_linux_web_app" "main" {
   name                = var.linux_web_app_name
   resource_group_name = var.resource_group_name
   service_plan_id     = azurerm_service_plan.main.id
-  tags                = var.tags
 
   public_network_access_enabled = false
   client_certificate_enabled    = true
@@ -44,9 +43,20 @@ resource "azurerm_linux_web_app" "main" {
   site_config {
     http2_enabled = true
     ftps_state    = "FtpsOnly"
+    always_on     = true
+
+    ip_restriction {
+      ip_address  = var.subnet_prefix
+      action      = "Allow"
+      priority    = 100
+      name        = "AllowSubet"
+      description = "Allow access from subnet"
+    }
   }
 
   auth_settings {
     enabled = true
   }
+
+  tags = var.tags
 }
