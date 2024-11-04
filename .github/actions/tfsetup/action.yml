@@ -43,7 +43,7 @@ runs:
       shell: bash
       id: init
       working-directory: ${{ inputs.WORKING_DIR }}
-      run: terraform init
+      run: terraform init -upgrade
 
     - name: 'Terraform validate'
       shell: bash
