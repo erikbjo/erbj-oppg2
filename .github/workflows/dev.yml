@@ -57,7 +57,8 @@ jobs:
 
   analyse:
     runs-on: ubuntu-latest
-    name: 'validate'
+    name: 'analyse'
+    needs: validate
     steps:
       - name: 'Checkout'
         id: checkout
@@ -97,7 +98,7 @@ jobs:
           key: tfplan-${{ github.run_id }}-${{ env.WORKSPACE }}-${{ github.run_number }}-${{ github.workflow_sha }}
 
   apply:
-    needs: validate
+    needs: analyse
     runs-on: ubuntu-latest
     name: 'apply'
     environment: 'dev'
