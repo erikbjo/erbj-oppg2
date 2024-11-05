@@ -1,14 +1,5 @@
-data "azurerm_client_config" "current" {}
-
-resource "random_string" "random" {
-  length  = 8
-  special = false
-  upper   = false
-  numeric = false
-}
-
 resource "azurerm_mssql_server" "main" {
-  name = format("mssql-%s", random_string.random.result)
+  name                          = var.mssql_server_name
   resource_group_name           = var.resource_group_name
   location                      = var.location
   version                       = "12.0"
@@ -32,7 +23,7 @@ resource "azurerm_mssql_server_extended_auditing_policy" "audit" {
 }
 
 resource "azurerm_mssql_database" "main" {
-  name           = "operaterra-db"
+  name           = var.mssql_database_name
   server_id      = azurerm_mssql_server.main.id
   collation      = "SQL_Latin1_General_CP1_CI_AS"
   license_type   = "LicenseIncluded"

@@ -21,23 +21,9 @@ env:
   WORKSPACE: ${{ github.workflow }}
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    name: 'validate'
-    steps:
-      - name: 'Action debug'
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
-
-      - name: 'Fine debug'
-        run: echo "${{ github.event_name }} ${{ github.event.action }} ${{ github.event.pull_request.merged }}"
-
-
   validate:
     runs-on: ubuntu-latest
     name: 'validate'
-    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
     steps:
       - name: 'Checkout'
         id: checkout
@@ -74,7 +60,7 @@ jobs:
         uses: actions/cache/save@v4.1.2
         with:
           path: ${{ env.WORKING_DIR }}/${{ env.WORKSPACE }}.tfplan
-          key: tfplan-${{ github.run_id }}
+          key: tfplan-${{ github.run_id }}-${{ env.WORKSPACE }}-${{ github.run_number }}-${{ github.workflow_sha }}
 
   apply:
     needs: validate
@@ -98,7 +84,7 @@ jobs:
         uses: actions/cache/restore@v4.1.2
         with:
           path: ${{ env.WORKING_DIR }}/${{ env.WORKSPACE }}.tfplan
-          key: tfplan-${{ github.run_id }}
+          key: tfplan-${{ github.run_id }}-${{ env.WORKSPACE }}-${{ github.run_number }}-${{ github.workflow_sha }}
 
       - name: 'Terraform apply'
         id: apply

@@ -4,6 +4,38 @@ Your company, OperaTerra, is launching a new e-commerce platform. As a DevOps en
 the infrastructure on Microsoft Azure using Terraform. The platform requires a web application, a database for product
 information and user data, and a storage solution for product images.
 
+## Deployment
+
+The infrastructure is primarily deployed using GitHub Actions, with three workflows for each environment. The
+infrastructure is deployed to the following environments:
+
+- Development (dev)
+- Staging (stage)
+- Production (prod)
+
+Each environment has its own workflow, which is triggered by a push to the respective branch. The workflow will run
+`terraform plan` and `terraform apply` for the respective environment, along with checks for formatting, validation, and
+security.
+
+To deploy the infrastructure from your local machine, you can run the following commands:
+
+```bash
+terraform init
+terraform workspace select <workspace> || terraform workspace new <workspace>
+terraform plan -var-file=<.tfvars file> -out=<plan file>
+terraform apply <plan file>
+```
+
+## Modules
+
+### Network
+
+### App Service
+
+### Database
+
+### Storage
+
 ## Requirements
 
 The infrastructure components you need to set up include a Virtual Network with proper subnets, an Azure Service Plan
@@ -33,21 +65,6 @@ An important part of this assignment is to analyze and discuss the three provide
 should choose one and justify your decision based on scalability, maintainability, separation of concerns, and ease of
 implementing CI/CD.
 
-## Deliverables
-
-IMPORTANT! A .zip-file with the following name, files and folders: Name the zip file with the ntnu username and oppg2,
-such as: melling-oppg2.zip In the zip file there must be a folder with the same name as the zip file:
-ntnuusername-oppg2, such as: melling-oppg2. The folder naturally contains the terraform files and folders and the CI/CD
-pipeline configuration files. A README.md file explaining your solution and how to use it. The reason for the naming is
-to streamline censorship and display in VS Code.
-
-Additionally, prepare a brief report (maximum 2 pages) discussing your chosen folder structure and your justification
-for it. In this report, also describe the challenges you faced during the implementation and how you overcame them.
-Finally, suggest potential improvements or optimizations for your solution.
-
-NOTE! It should be written so flexible that learning assistant or teacher could deploy this resources based on small
-changes, like change subscription ID.
-
 ## Evaluation Criteria
 
 Your submission will be evaluated based on the correct implementation of required infrastructure components and proper
@@ -57,3 +74,9 @@ of folder structure options, and the successful implementation of the CI/CD pipe
 
 This assignment is designed to test your ability to apply Terraform and Azure knowledge in a realistic scenario, make
 informed decisions about code organization, and implement robust DevOps practices. Good luck with your implementation!
+
+## Contact
+
+The repository for this project can be found [here](https://github.com/erikbjo/erbj-oppg2)
+
+If you have any questions, feel free to contact me at [erbj@stud.ntnu.no](mailto:erbj@stud.ntnu.no)

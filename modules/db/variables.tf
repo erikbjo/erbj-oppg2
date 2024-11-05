@@ -1,6 +1,6 @@
 variable "tags" {
   description = "A map of tags to apply to resources"
-  type = map(string)
+  type        = map(string)
 }
 
 variable "location" {
@@ -15,6 +15,7 @@ variable "resource_group_name" {
   nullable    = false
 }
 
+### Storage
 variable "storage_primary_blob_endpoint" {
   description = "The primary blob endpoint for the storage account"
   type        = string
@@ -27,14 +28,28 @@ variable "storage_account_access_key" {
   nullable    = false
 }
 
+### Network
 variable "subnet_id" {
   description = "The ID of the subnet to deploy the private endpoint to"
   type        = string
   nullable    = false
 }
 
+### Resource names
 variable "private_endpoint_name" {
   description = "The name of the private endpoint"
+  type        = string
+  nullable    = false
+}
+
+variable "mssql_server_name" {
+  description = "The name of the SQL server"
+  type        = string
+  nullable    = false
+}
+
+variable "mssql_database_name" {
+  description = "The name of the SQL database"
   type        = string
   nullable    = false
 }

@@ -8,6 +8,6 @@ resource "azurerm_private_endpoint" "db" {
     name                           = "db-endpoint-connection"
     private_connection_resource_id = azurerm_mssql_server.main.id
     is_manual_connection           = false
-    subresource_names = ["sqlServer"]
+    subresource_names              = ["sqlServer"]
   }
 }
