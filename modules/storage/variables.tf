@@ -15,6 +15,7 @@ variable "resource_group_name" {
   nullable    = false
 }
 
+### Resource names
 variable "storage_account_name" {
   description = "The name of the storage account"
   type        = string

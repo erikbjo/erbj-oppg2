@@ -15,6 +15,7 @@ variable "resource_group_name" {
   nullable    = false
 }
 
+### Resource names
 variable "vnet_name" {
   description = "The name of the virtual network"
   type        = string
