@@ -19,11 +19,19 @@ resource "azurerm_linux_web_app" "main" {
   service_plan_id               = azurerm_service_plan.main.id
   public_network_access_enabled = false
   client_certificate_enabled    = true
-  https_only                    = true
 
-  # storage_account {}
-  # TODO: implement storage account
-  # TODO: Health check path
+  # Gateway not implemented with https
+  https_only = false
+
+  storage_account {
+    name         = var.storage_account_resource_name
+    access_key   = var.storage_account_access_key
+    account_name = var.storage_account_name
+    share_name   = var.storage_container_name
+    type         = "AzureBlob"
+  }
+
+  # No health check endpoint
 
   identity {
     type = "SystemAssigned"
@@ -50,7 +58,7 @@ resource "azurerm_linux_web_app" "main" {
       ip_address  = var.subnet_prefix
       action      = "Allow"
       priority    = 100
-      name        = "AllowSubet"
+      name        = "AllowSubnet"
       description = "Allow access from subnet"
     }
   }

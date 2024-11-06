@@ -3,15 +3,16 @@ resource "azurerm_mssql_server" "main" {
   resource_group_name           = var.resource_group_name
   location                      = var.location
   version                       = "12.0"
-  administrator_login           = "4dm1n157r470r"
-  administrator_login_password  = "4-v3ry-53cr37-p455w0rd"
+  administrator_login           = var.mssql_administrator_login
+  administrator_login_password  = var.mssql_administrator_login_password
   public_network_access_enabled = false
   minimum_tls_version           = "1.2"
-  tags                          = var.tags
 
   identity {
     type = "SystemAssigned"
   }
+
+  tags = var.tags
 }
 
 resource "azurerm_mssql_server_extended_auditing_policy" "audit" {
@@ -33,9 +34,10 @@ resource "azurerm_mssql_database" "main" {
   read_scale     = false
   zone_redundant = false
   ledger_enabled = true
-  tags           = var.tags
 
   lifecycle {
     prevent_destroy = false
   }
+
+  tags = var.tags
 }

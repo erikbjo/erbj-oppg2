@@ -30,8 +30,6 @@ resource "azurerm_storage_account" "main" {
     }
   }
 
-  # TODO: Find a good way to implement network rules
-
   tags = var.tags
 }
 

@@ -1,15 +1,10 @@
 name: 'destroy'
 on:
   workflow_dispatch:
-    inputs:
-      workspace:
-        description: 'Workspace to destroy'
-        required: true
-        default: 'dev/stage/prod'
 
 env:
   WORKING_DIR: 'deployments'
-  WORKSPACE: ${{ inputs.workspace }}
+  WORKSPACE: ${{ vars.ENVIRONMENT }}
   TF_VAR_subscription_id: ${{ secrets.SUBSCRIPTION_ID }}
 
 jobs:

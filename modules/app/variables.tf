@@ -43,7 +43,32 @@ variable "application_port" {
   }
 }
 
-### Subnet
+### Storage
+variable "storage_account_access_key" {
+  description = "The access key for the storage account"
+  type        = string
+  nullable    = false
+}
+
+variable "storage_account_name" {
+  description = "The name of the storage account"
+  type        = string
+  nullable    = false
+}
+
+variable "storage_container_name" {
+  description = "The name of the storage container"
+  type        = string
+  nullable    = false
+}
+
+variable "storage_account_resource_name" {
+  description = "The name of the storage account resource"
+  type        = string
+  default     = "sa-web-app"
+}
+
+### Network
 variable "subnet_id" {
   description = "The ID of the subnet to deploy the app into"
   type        = string
