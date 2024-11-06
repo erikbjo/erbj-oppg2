@@ -4,8 +4,10 @@ on:
 
 env:
   WORKING_DIR: 'deployments'
-  WORKSPACE: ${{ vars.ENVIRONMENT }}
+  WORKSPACE: ${{ github.ref == 'refs/heads/main' && 'prod' || github.ref_name }}
   TF_VAR_subscription_id: ${{ secrets.SUBSCRIPTION_ID }}
+  TF_VAR_mssql_administrator_login: ${{ secrets.MSSQL_ADMINISTRATOR_LOGIN }}
+  TF_VAR_mssql_administrator_login_password: ${{ secrets.MSSQL_ADMINISTRATOR_LOGIN_PASSWORD }}
 
 jobs:
   destroy:
