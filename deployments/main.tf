@@ -20,8 +20,8 @@ module "network" {
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
 
-  subnet_name_prefix = module.naming.subnet.name
   vnet_name          = module.naming.virtual_network.name
+  subnet_name_prefix = module.naming.subnet.name
 
   tags = local.tags
 }
@@ -35,6 +35,8 @@ module "app" {
   storage_account_access_key = module.storage.storage_account_primary_access_key
   storage_account_name       = module.storage.storage_account_name
   storage_container_name     = module.naming.storage_container.name
+  worker_count               = var.worker_count
+  application_port           = var.application_port
 
   app_gateway_name   = module.naming.application_gateway.name
   linux_web_app_name = module.naming.app_service.name
@@ -63,12 +65,14 @@ module "storage" {
 }
 
 module "db" {
-  source                        = "../modules/db"
-  location                      = azurerm_resource_group.main.location
-  resource_group_name           = azurerm_resource_group.main.name
-  storage_account_access_key    = module.storage.storage_account_primary_access_key
-  storage_primary_blob_endpoint = module.storage.storage_account_blob_endpoint
-  subnet_id                     = module.network.main_subnet_id
+  source                             = "../modules/db"
+  location                           = azurerm_resource_group.main.location
+  resource_group_name                = azurerm_resource_group.main.name
+  storage_account_access_key         = module.storage.storage_account_primary_access_key
+  storage_primary_blob_endpoint      = module.storage.storage_account_blob_endpoint
+  subnet_id                          = module.network.main_subnet_id
+  mssql_administrator_login          = var.mssql_administrator_login
+  mssql_administrator_login_password = var.mssql_administrator_login_password
 
   private_endpoint_name = module.naming.private_endpoint.name
   mssql_database_name   = module.naming.mssql_database.name

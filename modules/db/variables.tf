@@ -15,6 +15,18 @@ variable "resource_group_name" {
   nullable    = false
 }
 
+variable "mssql_administrator_login" {
+  description = "The administrator login for the SQL server"
+  type        = string
+  nullable    = false
+}
+
+variable "mssql_administrator_login_password" {
+  description = "The administrator login password for the SQL server"
+  type        = string
+  nullable    = false
+}
+
 ### Storage
 variable "storage_primary_blob_endpoint" {
   description = "The primary blob endpoint for the storage account"

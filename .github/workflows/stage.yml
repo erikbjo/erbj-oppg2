@@ -16,6 +16,8 @@ permissions:
 
 env:
   TF_VAR_subscription_id: ${{ secrets.SUBSCRIPTION_ID }}
+  TF_VAR_mssql_administrator_login: ${{ secrets.MSSQL_ADMINISTRATOR_LOGIN }}
+  TF_VAR_mssql_administrator_login_password: ${{ secrets.MSSQL_ADMINISTRATOR_LOGIN_PASSWORD }}
   WORKING_DIR: 'deployments'
   GH_TOKEN: ${{ github.token }}
   WORKSPACE: ${{ github.workflow }}
