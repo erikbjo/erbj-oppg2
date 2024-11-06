@@ -5,7 +5,7 @@
 *.tfplan
 **/**/tfplan
 deployments/**tfvars**
-!deployments/terraform.tfvars.env.example
+!deployments/environment.tfvars.example
 
 ### macOS template
 # General

@@ -1,15 +1,22 @@
 resource "azurerm_virtual_network" "main" {
   name                = var.vnet_name
-  address_space       = ["10.0.0.0/16"]
   location            = var.location
   resource_group_name = var.resource_group_name
-  tags                = var.tags
+  address_space       = ["10.0.0.0/16"]
+
+  tags = var.tags
 }
 
-resource "azurerm_subnet" "subnet" {
-  count                = var.subnet_count
-  name                 = format("%s%d", var.subnet_name_prefix, count.index)
+resource "azurerm_subnet" "main" {
+  name                 = format("%s-main", var.subnet_name_prefix)
   resource_group_name  = var.resource_group_name
   virtual_network_name = azurerm_virtual_network.main.name
-  address_prefixes     = [format("10.0.%d.0/24", count.index)]
+  address_prefixes     = ["10.0.1.0/24"]
+}
+
+resource "azurerm_subnet" "app" {
+  name                 = format("%s-app", var.subnet_name_prefix)
+  resource_group_name  = var.resource_group_name
+  virtual_network_name = azurerm_virtual_network.main.name
+  address_prefixes     = ["10.0.2.0/24"]
 }

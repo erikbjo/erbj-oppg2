@@ -9,7 +9,6 @@ resource "azurerm_storage_account" "main" {
   public_network_access_enabled   = true
   allow_nested_items_to_be_public = true
   https_traffic_only_enabled      = true
-  tags                            = var.tags
 
   identity {
     type = "SystemAssigned"
@@ -31,13 +30,7 @@ resource "azurerm_storage_account" "main" {
     }
   }
 
-  # TODO: Find a good way to implement network rules
-  # error when uncommenting this block:
-  # retrieving Container "blobs" ... status 403
-  # network_rules {
-  #   default_action = "Deny"
-  #   bypass = ["AzureServices"]
-  # }
+  tags = var.tags
 }
 
 resource "azurerm_storage_container" "main" {

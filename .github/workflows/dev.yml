@@ -11,11 +11,13 @@ on:
       - '*.yml'
 
 permissions:
-  contents: read
+  contents: write
   pull-requests: read
 
 env:
   TF_VAR_subscription_id: ${{ secrets.SUBSCRIPTION_ID }}
+  TF_VAR_mssql_administrator_login: ${{ secrets.MSSQL_ADMINISTRATOR_LOGIN }}
+  TF_VAR_mssql_administrator_login_password: ${{ secrets.MSSQL_ADMINISTRATOR_LOGIN_PASSWORD }}
   WORKING_DIR: 'deployments'
   GH_TOKEN: ${{ github.token }}
   WORKSPACE: ${{ github.workflow }}
@@ -24,6 +26,42 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     name: 'validate'
+    steps:
+      - name: 'Checkout'
+        id: checkout
+        uses: actions/checkout@v4.1.7
+
+      - name: 'Setup Terraform with Azure credentials'
+        id: setup
+        uses: './.github/actions/tfsetup'
+        with:
+          AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+          WORKSPACE: ${{ env.WORKSPACE }}
+          WORKING_DIR: ${{ env.WORKING_DIR }}
+
+      - name: 'Terraform validate'
+        id: validate
+        working-directory: ${{ inputs.WORKING_DIR }}
+        run: terraform validate
+
+      - name: 'Terraform fmt'
+        id: fmt
+        working-directory: ${{ inputs.WORKING_DIR }}
+        run: terraform fmt -recursive
+
+      - uses: EndBug/add-and-commit@v9
+        with:
+          add: '*.tf'
+          committer_name: ${{ github.actor }}
+          default_author: github_actions
+          message: 'action: terraform fmt :taco: :champagne: :pizza: [skip ci]'
+          github_token: ${{ github.token }}
+          push: true
+
+  analyse:
+    runs-on: ubuntu-latest
+    name: 'analyse'
+    needs: validate
     steps:
       - name: 'Checkout'
         id: checkout
@@ -60,10 +98,10 @@ jobs:
         uses: actions/cache/save@v4.1.2
         with:
           path: ${{ env.WORKING_DIR }}/${{ env.WORKSPACE }}.tfplan
-          key: tfplan-${{ github.run_id }}-${{ env.WORKSPACE }}-${{ github.run_number }}-${{ github.workflow_sha }}
+          key: tfplan-${{ env.WORKSPACE }}-${{ github.run_number }}-${{ github.run_attempt }}
 
   apply:
-    needs: validate
+    needs: analyse
     runs-on: ubuntu-latest
     name: 'apply'
     environment: 'dev'
@@ -84,7 +122,7 @@ jobs:
         uses: actions/cache/restore@v4.1.2
         with:
           path: ${{ env.WORKING_DIR }}/${{ env.WORKSPACE }}.tfplan
-          key: tfplan-${{ github.run_id }}-${{ env.WORKSPACE }}-${{ github.run_number }}-${{ github.workflow_sha }}
+          key: tfplan-${{ env.WORKSPACE }}-${{ github.run_number }}-${{ github.run_attempt }}
 
       - name: 'Terraform apply'
         id: apply
