@@ -4,6 +4,10 @@ Your company, OperaTerra, is launching a new e-commerce platform. As a DevOps en
 the infrastructure on Microsoft Azure using Terraform. The platform requires a web application, a database for product
 information and user data, and a storage solution for product images.
 
+## Folder Structure
+
+See PROJECT_STRUCTURE.md for a detailed description of the three folder structures and my choice of structure.
+
 ## Deployment
 
 The infrastructure is primarily deployed using GitHub Actions, with three workflows for each environment. The
