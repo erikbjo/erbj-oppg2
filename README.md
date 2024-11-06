@@ -24,12 +24,40 @@ security.
 
 To deploy the infrastructure from your local machine, you can run the following commands:
 
+Setup backend:
+
 ```bash
+cd global
+terraform init
+terraform apply
+```
+
+Deploy infrastructure:
+
+```bash
+cd deployments
 terraform init
 terraform workspace select <workspace> || terraform workspace new <workspace>
 terraform plan -var-file=<.tfvars file> -out=<plan file>
 terraform apply <plan file>
 ```
+
+To replicate the deployment in GitHub Actions, you need to set AZURE_CREDENTIALS and SUBSCRIPTION_ID as secrets in your
+repository. The AZURE_CREDENTIALS secret should be in the following format:
+
+```json
+{
+  "clientSecret": "xxx",
+  "subscriptionId": "xxx",
+  "tenantId": "xxx",
+  "clientId": "xxx"
+}
+```
+
+GitHub Environments should be set up for each environment, dev, stage, and prod, with the respective branch protection
+rules. Each environment should have a variable 'ENVIRONMENT' set to the respective environment name. Handling of tfvars
+files should be done using GitHub Secrets, although this is not implemented in this project. Global action secrets are
+instead used for this purpose.
 
 ## Modules
 
