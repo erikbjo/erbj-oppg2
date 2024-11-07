@@ -55,17 +55,8 @@ resource "azurerm_linux_web_app" "main" {
     # always_on = true
 
     application_stack {
-      # Golang
       go_version = "1.19"
     }
-
-    # ip_restriction {
-    #   ip_address  = var.subnet_prefix
-    #   action      = "Allow"
-    #   priority    = 100
-    #   name        = "AllowSubnet"
-    #   description = "Allow access from subnet"
-    # }
   }
 
   auth_settings {
@@ -75,9 +66,9 @@ resource "azurerm_linux_web_app" "main" {
   tags = var.tags
 }
 
-resource "azurerm_linux_web_app_slot" "testing" {
+resource "azurerm_linux_web_app_slot" "restapi" {
   app_service_id = azurerm_linux_web_app.main.id
-  name           = "test"
+  name           = "restapi"
 
   public_network_access_enabled = true
 

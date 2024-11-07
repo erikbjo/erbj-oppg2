@@ -22,19 +22,21 @@ jobs:
         with:
           go-version: ${{ env.GO_VERSION }}
 
-      - run: go version
-
       - name: go build
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
           go build
+
+      - name: 'Login via Azure CLI'
+        uses: azure/login@v2.2.0
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3.0.1
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          slot-name: 'test'
-          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE}}
+          slot-name: 'restapi'
           package: .
           clean: true
