@@ -129,9 +129,13 @@ jobs:
         run: terraform apply -auto-approve ${{ env.WORKSPACE }}.tfplan
         working-directory: ${{ env.WORKING_DIR }}
 
+      - name: 'Create dir for REST api deployment'
+        run: mkdir -p restapi
+
       - name: 'Deploy REST API to Azure Web App'
         id: deployapi
         uses: './.github/actions/deployrestapi'
+        working-directory: restapi
         with:
           AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
           AZURE_WEBAPP_NAME: "app-erbj-operaterra-${{ env.WORKSPACE }}"
