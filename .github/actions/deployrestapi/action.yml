@@ -24,6 +24,14 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    - name: 'Make directory'
+      shell: bash
+      run: mkdir -p restapi
+
+    - name: 'Change directory'
+      shell: bash
+      run: cd restapi
+
     - name: 'Checkout sample go app'
       id: checkout
       uses: actions/checkout@v4.2.2
