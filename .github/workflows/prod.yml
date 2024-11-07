@@ -93,9 +93,8 @@ jobs:
         run: terraform apply -auto-approve ${{ env.WORKSPACE }}.tfplan
         working-directory: ${{ env.WORKING_DIR }}
 
-      - name: 'Deploy REST API to Azure Web App'
-        id: deployapi
-        uses: './.github/actions/deployrestapi'
+      - name: 'Invoke deploy to Azure Web App workflow'
+        uses: benc-uk/workflow-dispatch@v1.2.4
         with:
-          AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
-          AZURE_WEBAPP_NAME: "app-erbj-operaterra-${{ env.WORKSPACE }}"
+          workflow: deploy_web_app.yml
+          inputs: '{ "WORKSPACE": "${{ env.WORKSPACE }}" }'

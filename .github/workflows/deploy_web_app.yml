@@ -1,9 +1,13 @@
 name: 'deploy_web_app'
 on:
   workflow_dispatch:
+    inputs:
+      WORKSPACE:
+        description: 'Terraform workspace'
+        required: true
 
 env:
-  AZURE_WEBAPP_NAME: 'app-erbj-operaterra-dev' # TODO: Dynamically set this
+  AZURE_WEBAPP_NAME: "app-erbj-operaterra-${{ github.event.inputs.WORKSPACE }}"
   WORKING_DIRECTORY: '.'
   GO_VERSION: '1.19'
 
