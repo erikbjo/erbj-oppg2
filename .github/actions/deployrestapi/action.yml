@@ -61,4 +61,3 @@ runs:
         app-name: ${{ inputs.AZURE_WEBAPP_NAME }}
         slot-name: 'restapi'
         package: .
-        clean: true
