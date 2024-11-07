@@ -1,0 +1,56 @@
+name: 'Deploy REST api'
+description: 'Deploy a REST api to Azure Web App'
+author: 'https://github.com/erikbjo'
+
+inputs:
+  AZURE_CREDENTIALS:
+    description: 'Azure credentials, json format'
+    required: true
+
+  AZURE_WEBAPP_NAME:
+    description: 'Name of the Azure Web App'
+    required: true
+
+  WORKING_DIRECTORY:
+    description: 'Working directory to execute the deployment from, default: .'
+    default: '.'
+    required: false
+
+  GO_VERSION:
+    description: 'Go version to use, default: 1.19'
+    default: '1.19'
+    required: false
+
+runs:
+  using: 'composite'
+  steps:
+    - name: 'Checkout sample go app'
+      id: checkout
+      uses: actions/checkout@v4.2.2
+      with:
+        repository: 'erikbjo/prog2005assignment1'
+
+    - name: Setup Go
+      uses: actions/setup-go@v5.1.0
+      with:
+        go-version: ${{ inputs.GO_VERSION }}
+
+    - name: go build
+      shell: bash
+      working-directory: ${{ inputs.WORKING_DIRECTORY }}
+      run: |
+        go build
+
+    - name: 'Login via Azure CLI'
+      uses: azure/login@v2.2.0
+      with:
+        creds: ${{ inputs.AZURE_CREDENTIALS }}
+
+    - name: 'Deploy to Azure Web App'
+      id: deploy-to-webapp
+      uses: azure/webapps-deploy@v3.0.1
+      with:
+        app-name: ${{ inputs.AZURE_WEBAPP_NAME }}
+        slot-name: 'restapi'
+        package: .
+        clean: true

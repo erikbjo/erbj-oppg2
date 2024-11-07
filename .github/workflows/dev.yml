@@ -128,3 +128,10 @@ jobs:
         id: apply
         run: terraform apply -auto-approve ${{ env.WORKSPACE }}.tfplan
         working-directory: ${{ env.WORKING_DIR }}
+
+      - name: 'Deploy REST api'
+        id: deploy
+        uses: './.github/actions/deployrestapi'
+        with:
+          AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+          AZURE_WEBAPP_NAME: 'app-erbj-operaterra-'${{ env.WORKSPACE }}
