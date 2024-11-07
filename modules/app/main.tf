@@ -56,7 +56,7 @@ resource "azurerm_linux_web_app" "main" {
 
     application_stack {
       # Golang
-      go_version = "1.21"
+      go_version = "1.19"
     }
 
     # ip_restriction {
@@ -77,13 +77,13 @@ resource "azurerm_linux_web_app" "main" {
 
 resource "azurerm_linux_web_app_slot" "testing" {
   app_service_id = azurerm_linux_web_app.main.id
-  name           = "testing"
+  name           = "test"
 
   public_network_access_enabled = true
 
   site_config {
     application_stack {
-      go_version = "1.21"
+      go_version = "1.19"
     }
   }
 
