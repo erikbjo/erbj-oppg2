@@ -17,7 +17,7 @@ resource "azurerm_linux_web_app" "main" {
   location            = var.location
 
   service_plan_id               = azurerm_service_plan.main.id
-  public_network_access_enabled = false
+  public_network_access_enabled = true
   client_certificate_enabled    = true
 
   # Gateway not implemented with https
@@ -54,13 +54,13 @@ resource "azurerm_linux_web_app" "main" {
     ftps_state    = "FtpsOnly"
     always_on     = true
 
-    ip_restriction {
-      ip_address  = var.subnet_prefix
-      action      = "Allow"
-      priority    = 100
-      name        = "AllowSubnet"
-      description = "Allow access from subnet"
-    }
+    # ip_restriction {
+    #   ip_address  = var.subnet_prefix
+    #   action      = "Allow"
+    #   priority    = 100
+    #   name        = "AllowSubnet"
+    #   description = "Allow access from subnet"
+    # }
   }
 
   auth_settings {
