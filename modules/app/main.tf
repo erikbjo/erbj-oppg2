@@ -18,7 +18,7 @@ resource "azurerm_linux_web_app" "main" {
 
   service_plan_id               = azurerm_service_plan.main.id
   public_network_access_enabled = true
-  client_certificate_enabled    = true
+  # client_certificate_enabled    = true
 
   # Gateway not implemented with https
   https_only = false
@@ -51,8 +51,13 @@ resource "azurerm_linux_web_app" "main" {
 
   site_config {
     http2_enabled = true
-    ftps_state    = "FtpsOnly"
-    always_on     = true
+    # ftps_state    = "FtpsOnly"
+    # always_on = true
+
+    application_stack {
+      # Golang
+      go_version = "1.21"
+    }
 
     # ip_restriction {
     #   ip_address  = var.subnet_prefix
@@ -68,4 +73,21 @@ resource "azurerm_linux_web_app" "main" {
   }
 
   tags = var.tags
+}
+
+resource "azurerm_linux_web_app_slot" "testing" {
+  app_service_id = azurerm_linux_web_app.main.id
+  name           = "testing"
+
+  public_network_access_enabled = true
+
+  site_config {
+    application_stack {
+      go_version = "1.21"
+    }
+  }
+
+  auth_settings {
+    enabled = false
+  }
 }
