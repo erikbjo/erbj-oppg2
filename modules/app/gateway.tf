@@ -27,7 +27,12 @@ resource "azurerm_application_gateway" "app_gateway" {
 
   frontend_port {
     name = var.frontend_port_name
-    port = var.application_port
+    port = 80
+  }
+
+  frontend_port {
+    name = "https"
+    port = 443
   }
 
   frontend_ip_configuration {
@@ -62,7 +67,7 @@ resource "azurerm_application_gateway" "app_gateway" {
     cookie_based_affinity               = "Disabled"
     pick_host_name_from_backend_address = true
     path                                = "/"
-    port                                = var.application_port
+    port                                = 80
     protocol                            = "Http"
     request_timeout                     = 20
   }
