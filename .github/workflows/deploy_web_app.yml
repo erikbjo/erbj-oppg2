@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_WEBAPP_NAME: 'app-erbj-operaterra-dev-test' # TODO: Dynamically set this
+  AZURE_WEBAPP_NAME: 'app-erbj-operaterra-dev' # TODO: Dynamically set this
   WORKING_DIRECTORY: '.'
   GO_VERSION: '1.19'
 
@@ -34,5 +34,6 @@ jobs:
         uses: azure/webapps-deploy@v3.0.1
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          slot-name: 'test'
           publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE}}
           package: .
