@@ -59,10 +59,6 @@ resource "azurerm_linux_web_app" "main" {
     }
   }
 
-  auth_settings {
-    enabled = true
-  }
-
   tags = var.tags
 }
 
@@ -82,4 +78,6 @@ resource "azurerm_linux_web_app_slot" "restapi" {
   auth_settings {
     enabled = false
   }
+
+  tags = var.tags
 }

@@ -66,8 +66,8 @@ resource "azurerm_application_gateway" "app_gateway" {
     cookie_based_affinity               = "Disabled"
     pick_host_name_from_backend_address = true
     path                                = "/"
-    port                                = 80
-    protocol                            = "Http"
+    port                                = 443
+    protocol                            = "Https"
     request_timeout                     = 20
   }
 
