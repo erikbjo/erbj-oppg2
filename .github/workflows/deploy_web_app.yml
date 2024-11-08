@@ -1,4 +1,5 @@
 name: 'deploy_web_app'
+# Uses https://github.com/erikbjo/prog2005assignment1
 on:
   workflow_dispatch:
     inputs:
