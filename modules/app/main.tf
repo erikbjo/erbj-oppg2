@@ -66,6 +66,7 @@ resource "azurerm_linux_web_app" "main" {
   tags = var.tags
 }
 
+# See deploy_web_app.yml workflow for how this is used
 resource "azurerm_linux_web_app_slot" "restapi" {
   app_service_id = azurerm_linux_web_app.main.id
   name           = "restapi"
