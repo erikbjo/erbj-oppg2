@@ -44,4 +44,3 @@ jobs:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           slot-name: 'restapi'
           package: .
-          clean: true
