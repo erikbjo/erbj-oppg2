@@ -12,8 +12,3 @@ output "app_subnet_id" {
   value       = azurerm_subnet.app.id
   description = "The ID of the app subnet"
 }
-
-output "app_subnet_prefix" {
-  value       = azurerm_subnet.app.address_prefixes[0]
-  description = "The address prefix of the app subnet"
-}

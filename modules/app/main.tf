@@ -57,6 +57,8 @@ resource "azurerm_linux_web_app" "main" {
     application_stack {
       go_version = "1.19"
     }
+
+    # Should use network rules here, but not implemented as public internet access is required for deployment
   }
 
   tags = var.tags
