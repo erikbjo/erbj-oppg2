@@ -27,7 +27,12 @@ resource "azurerm_application_gateway" "app_gateway" {
 
   frontend_port {
     name = var.frontend_port_name
-    port = var.application_port
+    port = 80
+  }
+
+  frontend_port {
+    name = "https"
+    port = 443
   }
 
   frontend_ip_configuration {
@@ -38,7 +43,7 @@ resource "azurerm_application_gateway" "app_gateway" {
   backend_address_pool {
     name = var.backend_address_pool_name
     fqdns = [
-      azurerm_linux_web_app.main.default_hostname
+      azurerm_linux_web_app_slot.restapi.default_hostname
     ]
   }
 
@@ -52,7 +57,6 @@ resource "azurerm_application_gateway" "app_gateway" {
     pick_host_name_from_backend_http_settings = true
 
     match {
-      body        = ""
       status_code = [200]
     }
   }
@@ -62,8 +66,8 @@ resource "azurerm_application_gateway" "app_gateway" {
     cookie_based_affinity               = "Disabled"
     pick_host_name_from_backend_address = true
     path                                = "/"
-    port                                = var.application_port
-    protocol                            = "Http"
+    port                                = 443
+    protocol                            = "Https"
     request_timeout                     = 20
   }
 

@@ -1,0 +1,46 @@
+name: 'deploy_web_app'
+# Uses https://github.com/erikbjo/prog2005assignment1
+on:
+  workflow_dispatch:
+    inputs:
+      WORKSPACE:
+        description: 'Terraform workspace'
+        required: true
+
+env:
+  AZURE_WEBAPP_NAME: "app-erbj-operaterra-${{ github.event.inputs.WORKSPACE }}"
+  WORKING_DIRECTORY: '.'
+  GO_VERSION: '1.19'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout sample go app'
+        id: checkout
+        uses: actions/checkout@v4.2.2
+        with:
+          repository: 'erikbjo/prog2005assignment1'
+
+      - name: Setup Go
+        uses: actions/setup-go@v5.1.0
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: go build
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: |
+          go build
+
+      - name: 'Login via Azure CLI'
+        uses: azure/login@v2.2.0
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: 'Deploy to Azure Web App'
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v3.0.1
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          slot-name: 'restapi'
+          package: .

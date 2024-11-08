@@ -1,3 +1,17 @@
+resource "random_string" "username" {
+  length  = 8
+  special = false
+  numeric = false
+  upper   = false
+}
+
+resource "random_string" "password" {
+  length  = 16
+  special = true
+  numeric = true
+  upper   = true
+}
+
 resource "azurerm_mssql_server" "main" {
   name                          = var.mssql_server_name
   resource_group_name           = var.resource_group_name

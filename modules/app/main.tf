@@ -17,8 +17,8 @@ resource "azurerm_linux_web_app" "main" {
   location            = var.location
 
   service_plan_id               = azurerm_service_plan.main.id
-  public_network_access_enabled = false
-  client_certificate_enabled    = true
+  public_network_access_enabled = true
+  # client_certificate_enabled    = true
 
   # Gateway not implemented with https
   https_only = false
@@ -51,20 +51,34 @@ resource "azurerm_linux_web_app" "main" {
 
   site_config {
     http2_enabled = true
-    ftps_state    = "FtpsOnly"
-    always_on     = true
+    # ftps_state    = "FtpsOnly"
+    # always_on = true
 
-    ip_restriction {
-      ip_address  = var.subnet_prefix
-      action      = "Allow"
-      priority    = 100
-      name        = "AllowSubnet"
-      description = "Allow access from subnet"
+    application_stack {
+      go_version = "1.19"
+    }
+
+    # Should use network rules here, but not implemented as public internet access is required for deployment
+  }
+
+  tags = var.tags
+}
+
+# See deploy_web_app.yml workflow for how this is used
+resource "azurerm_linux_web_app_slot" "restapi" {
+  app_service_id = azurerm_linux_web_app.main.id
+  name           = "restapi"
+
+  public_network_access_enabled = true
+
+  site_config {
+    application_stack {
+      go_version = "1.19"
     }
   }
 
   auth_settings {
-    enabled = true
+    enabled = false
   }
 
   tags = var.tags

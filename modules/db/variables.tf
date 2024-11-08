@@ -16,15 +16,14 @@ variable "resource_group_name" {
 }
 
 variable "mssql_administrator_login" {
-  description = "The administrator login for the SQL server"
+  description = "The administrator login for the SQL server, uses a random login if not set"
   type        = string
-  nullable    = false
 }
 
 variable "mssql_administrator_login_password" {
-  description = "The administrator login password for the SQL server"
+  description = "The administrator login password for the SQL server, uses a random password if not set"
   type        = string
-  nullable    = false
+  sensitive   = true
 }
 
 ### Storage

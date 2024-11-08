@@ -29,20 +29,6 @@ variable "worker_count" {
   }
 }
 
-variable "application_port" {
-  description = "The port the application listens on"
-  type        = number
-  default     = 8080
-  validation {
-    condition     = var.application_port > 1024
-    error_message = "Application port must be greater than 1024"
-  }
-  validation {
-    condition     = var.application_port < 65535
-    error_message = "Application port must be less than 65535"
-  }
-}
-
 ### Storage
 variable "storage_account_access_key" {
   description = "The access key for the storage account"
@@ -71,12 +57,6 @@ variable "storage_account_resource_name" {
 ### Network
 variable "subnet_id" {
   description = "The ID of the subnet to deploy the app into"
-  type        = string
-  nullable    = false
-}
-
-variable "subnet_prefix" {
-  description = "The prefix of the subnet to allow access from"
   type        = string
   nullable    = false
 }

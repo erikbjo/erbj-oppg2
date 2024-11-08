@@ -2,8 +2,8 @@ module "naming" {
   source  = "Azure/naming/azurerm"
   version = "0.4.1"
   suffix = [
-    "erbj",
-    "operaterra",
+    local.tags.owner,
+    local.tags.client,
     terraform.workspace,
   ]
 }
@@ -31,12 +31,10 @@ module "app" {
   location                   = azurerm_resource_group.main.location
   resource_group_name        = azurerm_resource_group.main.name
   subnet_id                  = module.network.app_subnet_id
-  subnet_prefix              = module.network.app_subnet_prefix
   storage_account_access_key = module.storage.storage_account_primary_access_key
   storage_account_name       = module.storage.storage_account_name
   storage_container_name     = module.naming.storage_container.name
   worker_count               = var.worker_count
-  application_port           = var.application_port
 
   app_gateway_name   = module.naming.application_gateway.name
   linux_web_app_name = module.naming.app_service.name
