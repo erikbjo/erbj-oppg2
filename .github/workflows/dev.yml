@@ -13,6 +13,7 @@ on:
 permissions:
   contents: write
   pull-requests: read
+  actions: write
 
 env:
   TF_VAR_subscription_id: ${{ secrets.SUBSCRIPTION_ID }}
@@ -128,3 +129,10 @@ jobs:
         id: apply
         run: terraform apply -auto-approve ${{ env.WORKSPACE }}.tfplan
         working-directory: ${{ env.WORKING_DIR }}
+
+      - name: 'Invoke deploy to Azure Web App workflow'
+        uses: benc-uk/workflow-dispatch@v1.2.4
+        with:
+          workflow: deploy_web_app
+          inputs: '{ "WORKSPACE": "${{ env.WORKSPACE }}" }'
+          token: '${{ github.token }}'

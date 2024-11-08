@@ -42,9 +42,12 @@ are `app`, `db`, `network`, and `storage`. See [README](README.md) for more info
 
 ```text
 erbj-oppg2
+│
+├── MODULES.md
 ├── PROJECT_STRUCTURE.md
 ├── PROJECT_STRUCTURE_ALTERNATIVES.md
 ├── README.md
+│
 ├── .github
 │   ├── actions
 │   │    ├── checkovwithseveritylevel
@@ -56,6 +59,7 @@ erbj-oppg2
 │   │        └── action.yml
 │   │
 │   └── workflows
+│       ├── deploy_web_app.yml
 │       ├── destroy.yml
 │       ├── dev.yml
 │       ├── prod.yml
@@ -67,9 +71,9 @@ erbj-oppg2
 │    ├── outputs.tf
 │    ├── providers.tf
 │    ├── terraform.tf
-│    ├── dev.tfvars.dev
-│    ├── prod.tfvars.prod
-│    ├── stage.tfvars.stage
+│    ├── dev.tfvars
+│    ├── prod.tfvars
+│    ├── stage.tfvars
 │    ├── environment.tfvars.example
 │    └── variables.tf
 │
@@ -87,7 +91,6 @@ erbj-oppg2
 │
 └── modules
     ├── app
-    │    ├── README.md
     │    ├── gateway.tf
     │    ├── main.tf
     │    ├── outputs.tf
@@ -95,7 +98,6 @@ erbj-oppg2
     │    └── variables.tf
     │
     ├── db
-    │    ├── README.md
     │    ├── main.tf
     │    ├── network.tf
     │    ├── outputs.tf
@@ -103,14 +105,12 @@ erbj-oppg2
     │    └── variables.tf
     │
     ├── network
-    │    ├── README.md
     │    ├── main.tf
     │    ├── outputs.tf
     │    ├── terraform.tf
     │    └── variables.tf
     │
     └── storage
-        ├── README.md
         ├── main.tf
         ├── outputs.tf
         ├── terraform.tf
