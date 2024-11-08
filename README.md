@@ -9,6 +9,10 @@ information and user data, and a storage solution for product images.
 See [PROJECT_STRUCTURE](PROJECT_STRUCTURE.md) for a detailed description of the three folder structures and my choice of
 structure.
 
+## Modules
+
+See [MODULES](MODULES.md) for a detailed description of the modules used in this project.
+
 ## Deployment
 
 The infrastructure is primarily deployed using GitHub Actions, with three workflows for each environment. The
@@ -59,15 +63,11 @@ rules. Each environment should have a variable 'ENVIRONMENT' set to the respecti
 files should be done using GitHub Secrets, although this is not implemented in this project. Global action secrets are
 instead used for this purpose.
 
-## Modules
+## Further Improvements
 
-### Network
-
-### App Service
-
-### Database
-
-### Storage
+- Better network security
+- Implementing a CI/CD pipeline for deploying a more complex application with docker containers
+- Connect the web application to the database and storage
 
 ## Requirements
 

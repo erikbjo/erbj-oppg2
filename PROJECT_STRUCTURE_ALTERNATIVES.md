@@ -1,7 +1,5 @@
 # Terraform Azure Project Folder Structure Alternatives
 
----
-
 ## Alternative One
 
 ```text
