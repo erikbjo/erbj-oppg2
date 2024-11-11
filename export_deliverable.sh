@@ -13,17 +13,17 @@ cp -r . $FOLDER
 
 # remove files
 rm -rf $FOLDER/.git
-rm -rf $FOLDER/.idea
+rm -r $FOLDER/.idea
 
 rm -rf $FOLDER/deployments/.terraform
-rm -rf $FOLDER/deployments/*.tfvars
-rm -rf $FOLDER/deployments/.terraform.lock.hcl
+rm $FOLDER/deployments/*.tfvars
+rm $FOLDER/deployments/.terraform.lock.hcl
 
 rm -rf $FOLDER/global/.terraform
-rm -rf $FOLDER/global/terraform.tfstate
-rm -rf $FOLDER/global/terraform.tfstate.backup
-rm -rf $FOLDER/global/*.tfvars
-rm -rf $FOLDER/global/.terraform.lock.hcl
+rm $FOLDER/global/terraform.tfstate
+rm $FOLDER/global/terraform.tfstate.backup
+rm $FOLDER/global/*.tfvars
+rm $FOLDER/global/.terraform.lock.hcl
 
 # zappa
 zip -r $FOLDER.zip $FOLDER
