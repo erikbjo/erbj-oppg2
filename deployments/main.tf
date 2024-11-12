@@ -33,7 +33,7 @@ module "app" {
   subnet_id                  = module.network.app_subnet_id
   storage_account_access_key = module.storage.storage_account_primary_access_key
   storage_account_name       = module.storage.storage_account_name
-  storage_container_name     = module.naming.storage_container.name
+  storage_container_name     = module.storage.storage_container_name
   worker_count               = var.worker_count
 
   app_gateway_name   = module.naming.application_gateway.name

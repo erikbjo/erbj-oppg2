@@ -33,7 +33,7 @@ resource "azurerm_storage_account" "main" {
   tags = var.tags
 }
 
-resource "azurerm_storage_container" "main" {
+resource "azurerm_storage_container" "images" {
   name                  = "blobs"
   storage_account_name  = azurerm_storage_account.main.name
   container_access_type = "private"
