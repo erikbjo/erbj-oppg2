@@ -8,7 +8,8 @@ The network module is responsible for creating the network infrastructure. This 
 
 - vnet
 - subnet
-- network security group
+
+It creates two subnets, one for the main resources and one for the app service.
 
 ### Variables
 
@@ -94,6 +95,8 @@ The storage module is responsible for creating the storage infrastructure. This 
 - storage account
 - storage container
 
+The storage container is a blob container for storing images.
+
 ### Variables
 
 The storage module has the following variables:
@@ -109,3 +112,4 @@ The storage module has the following variables:
 - storage_account_name - The name of the storage account
 - storage_account_blob_endpoint - The blob endpoint for the storage account
 - storage_account_primary_access_key - The primary access key for the storage account
+- storage_container_name - The name of the storage container

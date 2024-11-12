@@ -40,6 +40,8 @@ There were several challenges during development, including:
 ## Further Improvements
 
 - Better network security
+    - Currently, they are no NSGs or firewalls in place to protect the resources. This is a major security risk, and
+      should be implemented.
 - Implementing a CI/CD pipeline for deploying a more complex application with docker containers
 - Connect the web application to the database and storage
 
